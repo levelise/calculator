@@ -1,0 +1,3492 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <title>Levelise Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #e5e5e5;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent-primary: #028eaf;
+            --accent-secondary: #016a83;
+            --accent-gradient: linear-gradient(135deg, #5dccf7 0%, #016a83 100%);
+            --success: #64b664;
+            --warning: #F59E0B;
+            --error: #EF4444;
+        }
+
+        /* Material Icons */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .material-symbols-outlined.fill-1 {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+            color-scheme: light;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #ffffff !important;
+            background-color: #ffffff !important;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .mono-values {
+            font-family: 'Inter', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 742px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 0 20px;
+            background: #ffffff !important;
+        }
+
+        .header {
+            position: static;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin-bottom: 4px;
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding-left: 24px;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(2, 142, 175, 0.25);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            box-shadow: 0 6px 16px rgba(2, 142, 175, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 24px 24px 24px;
+            margin: 0px 0 15px 0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.2s ease;
+        }
+
+        #batteryCard {
+            margin-bottom: 0;
+        }
+
+        .card:hover:not(.card-disabled) {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .card.card-disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+        }
+
+        #solarScenarioCard.card-disabled,
+        #leveliseScenarioCard.card-disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .card.card-disabled::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #64b664;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+        }
+
+        .card-title .input-number {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #000000;
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        #locationCard .card-title {
+            color: #e86035;
+        }
+
+        #demandCard .card-title {
+            color: #e86035;
+        }
+
+        #solarCard .card-title {
+            color: #e86035;
+        }
+
+        #ratesCard .card-title {
+            color: #e86035;
+        }
+
+        #batteryCard .card-title {
+            color: #e86035;
+            padding-bottom: 6px;
+        }
+
+        #scenarioCardsContainer {
+            margin-top: 16px !important;
+            background: #ffffff !important;
+        }
+
+        #scenarioCardsContainer .card-title {
+            color: #6963aa;
+        }
+
+        #scenarioCardsContainer .card-title .input-number {
+            color: #6963aa;
+            opacity: 1;
+        }
+
+        /* Compact Input Rows (Mobile-inspired) */
+        .input-row-compact {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .input-row-compact:last-child {
+            border-bottom: none;
+        }
+
+        .input-row-compact label {
+            flex: 1;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.7;
+            margin: 0;
+        }
+
+        .input-row-compact .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-row-compact input {
+            width: 64px;
+            text-align: right;
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: 0.875rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-row-compact input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .input-row-compact .unit {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.3;
+            width: 32px;
+            text-align: left;
+        }
+
+        /* Big Number Display */
+        .big-number-display {
+            padding: 16px;
+        }
+
+        .big-number-display .label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.6;
+            margin-bottom: 4px;
+        }
+
+        .big-number-display .value-wrapper {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .big-number-display .value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .big-number-display .unit {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.4;
+        }
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-group { margin-bottom: 20px; }
+
+        .input-group:last-child { margin-bottom: 0; }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .input-row:last-child {
+            border-bottom: none;
+        }
+
+        .input-row label {
+            flex: 1;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.7;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .input-row-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-row-control input {
+            width: 64px;
+            text-align: right;
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .input-row-control input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .input-row-unit {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            opacity: 0.3;
+            min-width: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.625rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.6;
+        }
+
+        .input-group label {
+            text-transform: none;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(2, 142, 175, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-size: 0.75rem;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Remove number input arrows/spinners */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .helper {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .info-display {
+            background: var(--bg-secondary);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 0;
+        }
+
+        .info-label { color: var(--text-muted); font-size: 0.75rem; }
+        .info-value { font-weight: 500; font-size: 0.875rem; }
+
+        .error, .info {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.875rem;
+            display: none;
+        }
+
+
+        .info {
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .error.show, .info.show { display: block; }
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .postcode-input-group {
+            position: relative;
+        }
+
+        .postcode-helper {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .location-display {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+            margin: 20px 0 0 0;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            display: block;
+        }
+
+
+        .location-display.show { display: block; }
+
+        .location-display strong {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .location-display .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+        }
+
+        .location-display .info-label {
+            color: var(--accent-primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .location-display .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+
+        .location-display .info-section-header {
+            padding: 16px;
+            background: rgba(2, 142, 175, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location-display .info-section-header h3 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .baseline-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64b664;
+        }
+
+        #batteryInfoDisplay .baseline-label {
+            color: #028eaf;
+        }
+
+        .rates-info .baseline-label {
+            color: #64b664;
+        }
+
+        .location-display .info-section-total {
+            padding: 16px;
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .rates-info .info-section-total {
+            background: #64b664;
+        }
+
+        #solarScenarioCard {
+            display: block;
+        }
+
+        #leveliseScenarioCard {
+            display: block;
+        }
+
+        #leveliseScenarioCard .info-section-total {
+            background: #028eaf !important;
+            padding: 18px 16px !important;
+        }
+
+        #batteryInfoDisplay .info-section-total {
+            background: #028eaf;
+        }
+
+        .location-display .info-section-total .total-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            line-height: 1;
+        }
+
+        .location-display .info-section-total .total-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+
+        .rates-info .info-section-total .total-label {
+            color: #ffffff;
+        }
+
+        .rates-info .info-section-total .total-value {
+            color: #ffffff;
+        }
+
+        .location-display .divider-dashed {
+            margin: 8px 0;
+        }
+
+        .results-card {
+            display: none;
+        }
+
+        .results-card.show { display: block; }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .result-item {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .result-item.highlight {
+            border-left-color: var(--accent-secondary);
+            background: linear-gradient(135deg, rgba(0, 220, 130, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+        }
+
+        .result-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+        }
+
+        .result-value.highlight { color: var(--accent-primary); }
+
+        .result-savings {
+            font-size: 0.75rem;
+            margin-top: 8px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            background: rgba(232, 96, 53, 0.1);
+            color: #e86035;
+            border-radius: 2px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            vertical-align: middle;
+            text-transform: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+
+        .stat-display {
+            margin-bottom: 24px;
+        }
+
+        .stat-display label {
+            display: block;
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            opacity: 0.6;
+            margin-bottom: 4px;
+        }
+
+        .stat-display-value {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .stat-display-number {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            font-family: 'Inter', sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-display-unit {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.4;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .summary-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 5px;
+        }
+
+        .summary-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .battery-list {
+            margin-top: 4px;
+        }
+
+        .battery-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr 0.9fr 24px;
+            gap: 6px;
+            align-items: center;
+            padding: 12px 0px 12px 0px;
+            margin-left: -2px;
+            margin-right: 0px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .battery-entry select, .battery-entry input {
+            padding: 6px 8px;
+            font-size: 0.875rem;
+        }
+
+        .battery-install {
+            padding: 6px 6px 6px 8px;
+            margin-left: 0px;
+        }
+
+        .battery-field {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 2px;
+        }
+
+        .battery-field input {
+            flex: 1;
+            padding-right: 36px;
+            padding-left: 6px;
+        }
+
+        .battery-unit {
+            position: absolute;
+            right: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .remove-battery {
+            background: #e86035;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            margin-left: 0px;
+        }
+
+        .add-battery {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+
+        .add-battery:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        @media (max-width: 1024px) {
+            .input-row { grid-template-columns: 1fr; }
+            .results-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Two-Column Layout Refinements */
+        .left-column > .card:first-of-type {
+            margin-top: 0;
+        }
+
+        .right-column > .card {
+            height: fit-content;
+        }
+
+        /* Results Summary Card Enhancements */
+        .results-summary-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .results-summary-card .comparison-grid {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        /* Sticky positioning for right column on desktop */
+        @media (min-width: 1025px) {
+            .right-column {
+                position: sticky;
+                top: 100px;
+            }
+        }
+
+        /* Ensure cards have consistent spacing */
+        .left-column .card,
+        .right-column .card {
+            margin: 0;
+        }
+
+        .left-column > *:not(:last-child),
+        .right-column > *:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                max-width: 100%;
+            }
+
+            .results-summary-card {
+                padding: 16px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <span class="header-title">Calculator<sup style="font-size: 0.35em; margin-left: 4px;">BETA</sup></span>
+            </div>
+            <div class="header-actions" style="margin-left: auto; padding-right: 24px;">
+                <a href="https://www.levelise.com" target="_blank"><img src="https://www.levelise.com/wp-content/uploads/2023/08/logo.png" alt="Levelise Logo" style="max-width: 90px; height: auto;"></a>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <div class="left-column">
+                <!-- Results Summary Card -->
+                <!-- Location Section -->
+                <div class="card" id="locationCard">
+                    <div class="card-title">
+                        <span>Location</span>
+                        <span class="input-number">Input 01</span>
+                    </div>
+                    <div class="input-group postcode-input-group">
+                        <label>POSTCODE AREA</label>
+                        <input type="text" id="postcodeInput" placeholder="OX"
+                               oninput="handlePostcodeInput(this.value)" style="text-transform: uppercase;">
+                        <p class="postcode-helper">First part of the postcode (i.e. postcode area)</p>
+                    </div>
+                    <div class="info-display" id="locationDisplay">
+                        <div class="info-row">
+                            <span class="info-label">Location</span>
+                            <span class="info-value" id="locationName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Coordinates</span>
+                            <span class="info-value" id="locationCoords">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">DNO Region</span>
+                            <span class="info-value" id="dnoDisplay">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consumption Section -->
+                <div class="card" id="demandCard">
+                    <div class="card-title">
+                        <span>Consumption</span>
+                        <span class="input-number">Input 02</span>
+                    </div>
+                    <div class="input-group">
+                        <label>HALF-HOURLY CONSUMPTION DATA (kWh)</label>
+                        <textarea id="demandData" placeholder="01-01-2024 00:00&#9;25.5
+01-01-2024 00:30	24.8
+…"></textarea>
+                        <p class="helper">17,520 values for full year (tab-separated)</p>
+                    </div>
+                    <div id="demandInfoDisplay" class="info-display">
+                        <div class="info-row">
+                            <span class="info-label">Consumption per year</span>
+                            <span class="info-value"><span id="annualDemandDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Maximum Consumption per period</span>
+                            <span class="info-value"><span id="curtailedDemandDisplay">-</span> kWh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solar Section -->
+                <div class="card" id="solarCard">
+                    <div class="card-title">
+                        <span>Solar</span>
+                        <span class="input-number">Input 03</span>
+                    </div>
+                    <div class="input-group">
+                        <label>EXPORT LIMIT (kW)</label>
+                        <input type="number" id="exportLimit" value="" min="0" step="1" placeholder="Empty = unlimited" oninput="updateSolarInverterBadge(); attemptAutoCalculate()">
+
+                    </div>
+                    <div class="input-group">
+                        <label style="margin-top: 20px; display: block;">HALF-HOURLY SOLAR GENERATION DATA (kWh)</label>
+                        <textarea id="solarProfile" placeholder="01-01-2024 00:00&#9;0.0
+01-01-2024 00:30	0.0
+…"></textarea>
+                        <p class="helper">17,520 values for full year (tab-separated)</p>
+                    </div>
+                    <div id="solarInfoDisplay" class="info-display">
+                        <div class="info-row">
+                            <span class="info-label">Generation per year</span>
+                            <span class="info-value"><span id="annualGenerationDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Self-Consumption per year</span>
+                            <span class="info-value"><span id="selfConsumptionGenerationDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Generation Exported per year</span>
+                            <span class="info-value"><span id="excessGenerationExportedDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Curtailed Generation per year</span>
+                            <span class="info-value"><span id="curtailedGenerationDisplay">-</span> kWh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rates Section -->
+                <div class="card" id="ratesCard">
+                    <div class="card-title">
+                        <span>Rates</span>
+                        <span class="input-number">Input 04</span>
+                    </div>
+                    <div class="input-group">
+                        <label>HALF-HOURLY TARIFF RATES (pence per kWh)</label>
+                        <textarea id="tariffData" placeholder="00:00&#9;30.0&#9;6.0
+00:30	30.0	6.0
+…"></textarea>
+                        <p class="helper">48 half-hourly periods (tab-separated)</p>
+                    </div>
+                    <div class="input-group">
+                        <label>STANDING CHARGE (pence per day)</label>
+                        <input type="number" id="standingCharge" placeholder="50.0" step="0.1">
+                    </div>
+                </div>
+
+                <!-- Battery Section -->
+                <div class="card" id="batteryCard">
+                    <div class="card-title">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span>Battery</span>
+                            <span class="badge" id="batteryTotalBadge">0 kW / 0 kWh</span>
+                        </div>
+                        <span class="input-number">Input 05</span>
+                    </div>
+                    <div class="battery-list" id="batteryList">
+                        <!-- Battery entries will be added here -->
+                    </div>
+                    <button class="add-battery" onclick="addBatteryEntry()">+</button>
+                    <div id="batteryOutputDisplay" class="info-display" style="margin-top: 12px;">
+                        <div class="info-row">
+                            <span class="info-label">Maximum Import per period</span>
+                            <span class="info-value"><span id="maxImportDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Self-Consumption per year</span>
+                            <span class="info-value"><span id="batteryDemandReductionDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Generation Exported per year</span>
+                            <span class="info-value"><span id="batteryExportDisplay">-</span> kWh</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Curtailed Generation per year</span>
+                            <span class="info-value"><span id="batteryCurtailedDisplay">-</span> kWh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario Cards Section -->
+                <div class="card card-disabled" id="scenarioCardsContainer">
+                    <div class="card-title">
+                        <span>SAVINGS</span>
+                        <span class="input-number">OUTPUT 01</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <!-- Solar Scenario Card -->
+                        <div id="solarScenarioCard" class="card-disabled">
+                            <div class="location-display rates-info">
+                                <div class="info-section-header" style="background: rgba(100,182,100, 0.02);">
+                                    <h3 style="color: #64b664;">-%</h3>
+                                    <span class="baseline-label" style="color: #64b664;">SOLAR</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Consumption<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Half-hourly Consumption × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">£-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Standing Charge<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Daily Charge × 365)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">£-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Demand Reduction<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Self-Consumption × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Excess Solar<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Exported Generation × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div class="info-section-total" style="background: #64b664;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+                                        <div class="total-label" style="color: #ffffff;">Cost per Unit</div>
+                                        <div class="total-label" style="text-align: right; color: #ffffff;">ENERGY BILL</div>
+                                        <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; color: #ffffff;">
+                                            <span>£-</span><span style="font-size: 0.75rem; opacity: 0.8;"> per kWh</span>
+                                        </div>
+                                        <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; color: #ffffff; text-align: right;">
+                                            £-
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- With Levelise Scenario Card -->
+                        <div id="leveliseScenarioCard" class="card-disabled">
+                            <div class="location-display rates-info">
+                                <div class="info-section-header" style="background: rgba(2,142,175, 0.02);">
+                                    <h3 style="color: #028eaf;">-%</h3>
+                                    <span class="baseline-label" style="color: #028eaf;">SOLAR + BATTERY</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Consumption<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Half-hourly Consumption × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">£-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Standing Charge<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Daily Charge × 365)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">£-</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Demand Reduction<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Self-Consumption × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Excess Solar<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Exported Generation × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Off-peak Charging<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Grid Discharge × Rates) - (Grid Charge × Rates)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem;">Flexibility<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">(Direct Payments from Levelise)</span></span>
+                                    <span style="color: #000000; font-weight: 600; font-size: 0.875rem;">(£-)</span>
+                                </div>
+                                <div class="info-section-total" style="background: #028eaf;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+                                        <div class="total-label" style="color: #ffffff;">Cost per Unit</div>
+                                        <div class="total-label" style="text-align: right; color: #ffffff;">ENERGY BILL</div>
+                                        <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; color: #ffffff;">
+                                            <span>£-</span><span style="font-size: 0.75rem; opacity: 0.8;"> per kWh</span>
+                                        </div>
+                                        <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; color: #ffffff; text-align: right;">
+                                            £-
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 24px 20px; margin-top: 40px; font-size: 0.75rem; color: #999999;">
+            Levelise Limited is registered in England and Wales. Company number: 10653159, Levelise® is a registered Trademark of Levelise Limited © 2026 Levelise Limited, All rights reserved.
+        </footer>
+    </div>
+
+<script>
+
+    // Global error handler
+
+    // Data storage
+    let currentLocation = null;
+    let temperatureData = [];
+    let batteryInstallations = [];
+    const RESPONSE_PRICE = 1.84;  // Constant response market price (£/MW per half-hour, which is £3.68/MW per hour)
+    const CAPACITY_PRICE = 17.63;  // Constant capacity market price (£17.63/kW per year, only if export allowed)
+
+    // Embedded example energy data (17,520 half-hourly readings for 365 days with timestamps)
+    const EXAMPLE_ENERGY_DATA = {
+        demand: `0.11
+0.09
+0.08
+0.08
+0.08
+0.09
+0.14
+0.19
+0.27
+0.31
+0.24
+0.19
+0.17
+0.15
+0.14
+0.12
+0.11
+0.12
+0.14
+0.15
+0.17
+0.18
+0.19
+0.18
+0.15
+0.14
+0.12
+0.11
+0.11
+0.11
+0.14
+0.15
+0.19
+0.24
+0.29
+0.32
+0.34
+0.32
+0.27
+0.23
+0.19
+0.15
+0.14
+0.12
+0.11
+0.09
+0.08
+0.08
+0.12
+0.10
+0.08
+0.08
+0.08
+0.10
+0.14
+0.20
+0.28
+0.32
+0.26
+0.20
+0.18
+0.16
+0.14
+0.13
+0.12
+0.13
+0.14
+0.16
+0.18
+0.19
+0.20
+0.19
+0.17
+0.16
+0.14
+0.12
+0.11
+0.09
+0.08
+0.08
+0.11
+0.10
+0.08
+0.08
+0.08
+0.10
+0.14
+0.20
+0.28
+0.32
+0.26
+0.20
+0.18
+0.16
+0.14
+0.13
+0.12
+0.13
+0.14
+0.16
+0.18
+0.19
+0.20
+0.19
+0.17
+0.16
+0.14
+0.12
+0.11
+0.09
+0.08
+0.08`, solar: `0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.10
+0.13
+0.15
+0.16
+0.16
+0.15
+0.13
+0.10
+0.06
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.10
+0.13
+0.15
+0.16
+0.16
+0.15
+0.13
+0.10
+0.06
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.10
+0.13
+0.15
+0.16
+0.16
+0.15
+0.13
+0.10
+0.06
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.10
+0.13
+0.15
+0.16
+0.16
+0.15
+0.13
+0.10
+0.06
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.10
+0.13
+0.15
+0.16
+0.16
+0.15
+0.13
+0.10
+0.06
+0.00
+0.00
+0.00
+0.00`
+};
+
+    // UK Locations data
+    const UK_LOCATIONS = {
+        // England - South
+        london: { name: 'London', lat: 51.5, irradiance: 950, avgTemp: 11.5, winterMin: 3, summerMax: 23, dno: 'UKPN (London)', region: 'South East' },
+        southampton: { name: 'Southampton', lat: 50.9, irradiance: 980, avgTemp: 11.8, winterMin: 4, summerMax: 22, dno: 'SSEN (Southern)', region: 'South' },
+        brighton: { name: 'Brighton', lat: 50.8, irradiance: 990, avgTemp: 11.5, winterMin: 4, summerMax: 21, dno: 'UKPN (South East)', region: 'South East' },
+        // England - Midlands
+        birmingham: { name: 'Birmingham', lat: 52.5, irradiance: 880, avgTemp: 10.2, winterMin: 2, summerMax: 21, dno: 'WPD (West Midlands)', region: 'West Midlands' },
+        nottingham: { name: 'Nottingham', lat: 52.9, irradiance: 870, avgTemp: 10.0, winterMin: 2, summerMax: 21, dno: 'WPD (East Midlands)', region: 'East Midlands' },
+        leicester: { name: 'Leicester', lat: 52.6, irradiance: 875, avgTemp: 10.1, winterMin: 2, summerMax: 21, dno: 'WPD (East Midlands)', region: 'East Midlands' },
+        // England - North
+        manchester: { name: 'Manchester', lat: 53.5, irradiance: 820, avgTemp: 10.0, winterMin: 2, summerMax: 20, dno: 'Electricity North West', region: 'North West' },
+        leeds: { name: 'Leeds', lat: 53.8, irradiance: 810, avgTemp: 9.8, winterMin: 2, summerMax: 20, dno: 'Northern Powergrid', region: 'Yorkshire' },
+        liverpool: { name: 'Liverpool', lat: 53.4, irradiance: 830, avgTemp: 10.5, winterMin: 3, summerMax: 20, dno: 'SP Energy Networks', region: 'North West' },
+        sheffield: { name: 'Sheffield', lat: 53.4, irradiance: 800, avgTemp: 9.5, winterMin: 1, summerMax: 20, dno: 'Northern Powergrid', region: 'Yorkshire' },
+        newcastle: { name: 'Newcastle', lat: 54.9, irradiance: 780, avgTemp: 9.2, winterMin: 1, summerMax: 19, dno: 'Northern Powergrid', region: 'North East' },
+        // Wales
+        cardiff: { name: 'Cardiff', lat: 51.5, irradiance: 900, avgTemp: 10.8, winterMin: 3, summerMax: 21, dno: 'WPD (South Wales)', region: 'Wales' },
+        swansea: { name: 'Swansea', lat: 51.6, irradiance: 890, avgTemp: 10.5, winterMin: 3, summerMax: 20, dno: 'WPD (South Wales)', region: 'Wales' },
+        // Scotland
+        edinburgh: { name: 'Edinburgh', lat: 55.9, irradiance: 790, avgTemp: 9.0, winterMin: 1, summerMax: 18, dno: 'SP Energy Networks', region: 'Scotland' },
+        glasgow: { name: 'Glasgow', lat: 55.9, irradiance: 780, avgTemp: 9.2, winterMin: 1, summerMax: 18, dno: 'SP Energy Networks', region: 'Scotland' },
+        aberdeen: { name: 'Aberdeen', lat: 57.1, irradiance: 750, avgTemp: 8.5, winterMin: 0, summerMax: 17, dno: 'SSEN (North Scotland)', region: 'Scotland' },
+        inverness: { name: 'Inverness', lat: 57.5, irradiance: 740, avgTemp: 8.2, winterMin: -1, summerMax: 17, dno: 'SSEN (North Scotland)', region: 'Scotland' },
+        // Northern Ireland
+        belfast: { name: 'Belfast', lat: 54.6, irradiance: 800, avgTemp: 9.5, winterMin: 2, summerMax: 18, dno: 'NIE Networks', region: 'Northern Ireland' }
+    };
+
+    // Battery types
+    const BATTERY_TYPES = {
+        ci_small: { name: 'C&I Small', power: 50, capacity: 100, description: '50kW / 100kWh' },
+        ci_medium: { name: 'C&I Medium', power: 100, capacity: 200, description: '100kW / 200kWh' },
+        ci_large: { name: 'C&I Large', power: 250, capacity: 500, description: '250kW / 500kWh' },
+        ci_xlarge: { name: 'C&I X-Large', power: 500, capacity: 1000, description: '500kW / 1MWh' },
+        utility_small: { name: 'Utility Small', power: 1000, capacity: 2000, description: '1MW / 2MWh' },
+        custom: { name: 'Custom', power: 0, capacity: 0, description: 'Enter values' }
+    };
+
+    // Chargepoint types
+    const CHARGEPOINTS = {
+        ac_7: { power: 7, type: 'AC', description: '7kW Single Phase' },
+        ac_11: { power: 11, type: 'AC', description: '11kW Three Phase' },
+        ac_22: { power: 22, type: 'AC', description: '22kW Three Phase' },
+        dc_50: { power: 50, type: 'DC', description: '50kW DC Fast' },
+        dc_150: { power: 150, type: 'DC', description: '150kW DC Rapid' }
+    };
+
+    // Utility functions
+    // Location functions
+    window.loadLocation = function(locationId) {
+
+        if (!locationId) {
+            const irradianceEl = document.getElementById('irradianceDisplay');
+            const tempEl = document.getElementById('temperatureDisplay');
+            const dnoEl = document.getElementById('dnoDisplay');
+            const chartContainer = document.getElementById('temperatureChartContainer');
+            if (irradianceEl) irradianceEl.innerHTML = '-- kWh/kWp/yr';
+            if (tempEl) tempEl.innerHTML = '-- °C';
+            if (dnoEl) dnoEl.innerHTML = '-- Select location --';
+            currentLocation = null;
+            temperatureData = [];
+            return;
+        }
+
+        const loc = UK_LOCATIONS[locationId];
+        if (!loc) return;
+
+        currentLocation = loc;
+
+        // Update displays
+        const irradianceEl = document.getElementById('irradianceDisplay');
+        const tempEl = document.getElementById('temperatureDisplay');
+        const dnoEl = document.getElementById('dnoDisplay');
+        if (irradianceEl) irradianceEl.innerHTML = `${loc.irradiance} kWh/kWp/yr`;
+        if (tempEl) tempEl.innerHTML = `${loc.avgTemp}°C (avg)`;
+        if (dnoEl) dnoEl.innerHTML = loc.dno;
+
+        // Update location display
+        const locationNameEl = document.getElementById('locationName');
+        const locationCoordsEl = document.getElementById('locationCoords');
+        if (locationNameEl) locationNameEl.textContent = loc.name;
+        if (locationCoordsEl) locationCoordsEl.textContent =
+            `${loc.lat.toFixed(4)}°N, ${loc.lat > 0 ? 'N' : 'S'}`;
+
+        // Initialize map
+        initializeMap(loc.lat, -2.5, loc.name); // Approximate UK center longitude
+
+        generateTemperatureData(loc);
+
+        // Regenerate solar if preset selected
+        const solarSelector = document.getElementById('solarSelector');
+        if (solarSelector && solarSelector.value) {
+            loadSolarProfile(solarSelector.value);
+        }
+
+        attemptAutoCalculate();
+
+    };
+
+    function generateTemperatureData(loc) {
+
+        temperatureData = [];
+        const periodsPerDay = 48;
+        const daysInYear = 365;
+
+        for (let day = 0; day < daysInYear; day++) {
+            // Seasonal variation (cosine wave peaking in summer)
+            const dayOfYear = day + 1;
+            const seasonalFactor = Math.cos((dayOfYear - 172) * 2 * Math.PI / 365);
+            const seasonalRange = (loc.summerMax - loc.winterMin) / 2;
+            const seasonalBase = (loc.summerMax + loc.winterMin) / 2;
+            const dailyAvg = seasonalBase - seasonalFactor * seasonalRange;
+
+            for (let period = 0; period < periodsPerDay; period++) {
+                // Diurnal variation (warmer in afternoon)
+                const hourOfDay = period / 2;
+                const diurnalFactor = Math.cos((hourOfDay - 14) * 2 * Math.PI / 24);
+                const diurnalRange = 3 + Math.abs(seasonalFactor) * 2;
+                const temp = dailyAvg - diurnalFactor * diurnalRange;
+
+                // Add small random variation
+                const noise = (Math.random() - 0.5) * 2;
+                temperatureData.push(temp + noise);
+            }
+        }
+    };
+
+    // Postcode functions
+    // Hardcoded UK postcode area coordinates (all 121 postcode areas)
+    const postcodeCoordinates = {
+        // London
+        'E': { lat: 51.5450, lon: -0.0553, name: 'East London' },
+        'EC': { lat: 51.5155, lon: -0.0922, name: 'East Central London' },
+        'N': { lat: 51.5732, lon: -0.0958, name: 'North London' },
+        'NW': { lat: 51.5472, lon: -0.1939, name: 'North West London' },
+        'SE': { lat: 51.4500, lon: -0.0500, name: 'South East London' },
+        'SW': { lat: 51.4613, lon: -0.1680, name: 'South West London' },
+        'W': { lat: 51.5154, lon: -0.1755, name: 'West London' },
+        'WC': { lat: 51.5170, lon: -0.1200, name: 'West Central London' },
+        
+        // Greater London & surrounding
+        'BR': { lat: 51.4039, lon: 0.0198, name: 'Bromley' },
+        'CR': { lat: 51.3714, lon: -0.0977, name: 'Croydon' },
+        'DA': { lat: 51.4462, lon: 0.2116, name: 'Dartford' },
+        'EN': { lat: 51.6522, lon: -0.0808, name: 'Enfield' },
+        'HA': { lat: 51.5791, lon: -0.3415, name: 'Harrow' },
+        'IG': { lat: 51.5590, lon: 0.0741, name: 'Ilford' },
+        'KT': { lat: 51.3782, lon: -0.2924, name: 'Kingston upon Thames' },
+        'RM': { lat: 51.5768, lon: 0.1801, name: 'Romford' },
+        'SM': { lat: 51.3618, lon: -0.1945, name: 'Sutton' },
+        'TW': { lat: 51.4490, lon: -0.3325, name: 'Twickenham' },
+        'UB': { lat: 51.5106, lon: -0.3761, name: 'Southall' },
+        'WD': { lat: 51.6565, lon: -0.3903, name: 'Watford' },
+        
+        // South East England
+        'BN': { lat: 50.8279, lon: -0.1396, name: 'Brighton' },
+        'CT': { lat: 51.2787, lon: 1.0789, name: 'Canterbury' },
+        'GU': { lat: 51.2362, lon: -0.5704, name: 'Guildford' },
+        'HP': { lat: 51.7530, lon: -0.4690, name: 'Hemel Hempstead' },
+        'LU': { lat: 51.8787, lon: -0.4200, name: 'Luton' },
+        'ME': { lat: 51.3787, lon: 0.5029, name: 'Medway' },
+        'MK': { lat: 52.0406, lon: -0.7594, name: 'Milton Keynes' },
+        'OX': { lat: 51.7520, lon: -1.2577, name: 'Oxford' },
+        'PO': { lat: 50.7987, lon: -1.0916, name: 'Portsmouth' },
+        'RG': { lat: 51.4542, lon: -0.9731, name: 'Reading' },
+        'RH': { lat: 51.2365, lon: -0.1676, name: 'Redhill' },
+        'SG': { lat: 51.9015, lon: -0.2019, name: 'Stevenage' },
+        'SL': { lat: 51.5105, lon: -0.5950, name: 'Slough' },
+        'SO': { lat: 50.9097, lon: -1.4044, name: 'Southampton' },
+        'TN': { lat: 51.1321, lon: 0.2634, name: 'Tunbridge Wells' },
+        
+        // East of England
+        'AL': { lat: 51.7530, lon: -0.3360, name: 'St Albans' },
+        'CB': { lat: 52.2053, lon: 0.1218, name: 'Cambridge' },
+        'CM': { lat: 51.7343, lon: 0.4691, name: 'Chelmsford' },
+        'CO': { lat: 51.8860, lon: 0.8919, name: 'Colchester' },
+        'IP': { lat: 52.0567, lon: 1.1482, name: 'Ipswich' },
+        'NR': { lat: 52.6309, lon: 1.2974, name: 'Norwich' },
+        'PE': { lat: 52.5695, lon: -0.2405, name: 'Peterborough' },
+        'SS': { lat: 51.5406, lon: 0.7077, name: 'Southend-on-Sea' },
+        
+        // South West England
+        'BA': { lat: 51.3751, lon: -2.3597, name: 'Bath' },
+        'BH': { lat: 50.7192, lon: -1.8808, name: 'Bournemouth' },
+        'BS': { lat: 51.4545, lon: -2.5879, name: 'Bristol' },
+        'DT': { lat: 50.7131, lon: -2.4380, name: 'Dorchester' },
+        'EX': { lat: 50.7256, lon: -3.5269, name: 'Exeter' },
+        'GL': { lat: 51.8642, lon: -2.2382, name: 'Gloucester' },
+        'PL': { lat: 50.3755, lon: -4.1427, name: 'Plymouth' },
+        'SN': { lat: 51.5558, lon: -1.7797, name: 'Swindon' },
+        'SP': { lat: 51.0688, lon: -1.7945, name: 'Salisbury' },
+        'TA': { lat: 51.0147, lon: -3.1028, name: 'Taunton' },
+        'TQ': { lat: 50.4619, lon: -3.5253, name: 'Torquay' },
+        'TR': { lat: 50.2632, lon: -5.0510, name: 'Truro' },
+        
+        // West Midlands
+        'B': { lat: 52.4862, lon: -1.8904, name: 'Birmingham' },
+        'CV': { lat: 52.4081, lon: -1.5106, name: 'Coventry' },
+        'DY': { lat: 52.5119, lon: -2.0845, name: 'Dudley' },
+        'HR': { lat: 52.0565, lon: -2.7160, name: 'Hereford' },
+        'ST': { lat: 52.9873, lon: -2.1490, name: 'Stoke-on-Trent' },
+        'TF': { lat: 52.6779, lon: -2.4494, name: 'Telford' },
+        'WR': { lat: 52.1936, lon: -2.2216, name: 'Worcester' },
+        'WS': { lat: 52.5860, lon: -1.9829, name: 'Walsall' },
+        'WV': { lat: 52.5870, lon: -2.1288, name: 'Wolverhampton' },
+        
+        // East Midlands
+        'DE': { lat: 52.9225, lon: -1.4746, name: 'Derby' },
+        'LE': { lat: 52.6369, lon: -1.1398, name: 'Leicester' },
+        'LN': { lat: 53.2307, lon: -0.5406, name: 'Lincoln' },
+        'NG': { lat: 52.9548, lon: -1.1581, name: 'Nottingham' },
+        'NN': { lat: 52.2405, lon: -0.8970, name: 'Northampton' },
+        
+        // Yorkshire and Humber
+        'BD': { lat: 53.7960, lon: -1.7594, name: 'Bradford' },
+        'DN': { lat: 53.5228, lon: -1.1287, name: 'Doncaster' },
+        'HD': { lat: 53.6458, lon: -1.7850, name: 'Huddersfield' },
+        'HG': { lat: 53.9921, lon: -1.5418, name: 'Harrogate' },
+        'HU': { lat: 53.7457, lon: -0.3367, name: 'Hull' },
+        'HX': { lat: 53.7247, lon: -1.8630, name: 'Halifax' },
+        'LS': { lat: 53.7997, lon: -1.5492, name: 'Leeds' },
+        'S': { lat: 53.3811, lon: -1.4701, name: 'Sheffield' },
+        'WF': { lat: 53.6832, lon: -1.4960, name: 'Wakefield' },
+        'YO': { lat: 53.9590, lon: -1.0815, name: 'York' },
+        
+        // North West England
+        'BB': { lat: 53.7566, lon: -2.4821, name: 'Blackburn' },
+        'BL': { lat: 53.5768, lon: -2.4282, name: 'Bolton' },
+        'CA': { lat: 54.8951, lon: -2.9382, name: 'Carlisle' },
+        'CH': { lat: 53.1905, lon: -2.8910, name: 'Chester' },
+        'CW': { lat: 53.0977, lon: -2.4417, name: 'Crewe' },
+        'FY': { lat: 53.8142, lon: -3.0503, name: 'Blackpool' },
+        'L': { lat: 53.4084, lon: -2.9916, name: 'Liverpool' },
+        'LA': { lat: 54.0466, lon: -2.8007, name: 'Lancaster' },
+        'M': { lat: 53.4808, lon: -2.2426, name: 'Manchester' },
+        'OL': { lat: 53.5444, lon: -2.1169, name: 'Oldham' },
+        'PR': { lat: 53.7632, lon: -2.7031, name: 'Preston' },
+        'SK': { lat: 53.4080, lon: -2.1590, name: 'Stockport' },
+        'SY': { lat: 52.7077, lon: -2.7536, name: 'Shrewsbury' },
+        'WA': { lat: 53.3900, lon: -2.5970, name: 'Warrington' },
+        'WN': { lat: 53.5450, lon: -2.6325, name: 'Wigan' },
+        
+        // North East England
+        'DH': { lat: 54.7753, lon: -1.5849, name: 'Durham' },
+        'DL': { lat: 54.5235, lon: -1.5536, name: 'Darlington' },
+        'NE': { lat: 54.9783, lon: -1.6178, name: 'Newcastle upon Tyne' },
+        'SR': { lat: 54.9069, lon: -1.3838, name: 'Sunderland' },
+        'TS': { lat: 54.5742, lon: -1.2350, name: 'Middlesbrough' },
+        
+        // Wales
+        'CF': { lat: 51.4816, lon: -3.1791, name: 'Cardiff' },
+        'LD': { lat: 52.2381, lon: -3.3818, name: 'Llandrindod Wells' },
+        'LL': { lat: 53.3206, lon: -3.8304, name: 'Llandudno' },
+        'NP': { lat: 51.5877, lon: -2.9977, name: 'Newport' },
+        'SA': { lat: 51.6214, lon: -3.9436, name: 'Swansea' },
+        
+        // Scotland
+        'AB': { lat: 57.1437, lon: -2.1150, name: 'Aberdeen' },
+        'DD': { lat: 56.4620, lon: -2.9707, name: 'Dundee' },
+        'DG': { lat: 55.0707, lon: -3.6058, name: 'Dumfries' },
+        'EH': { lat: 55.9533, lon: -3.1883, name: 'Edinburgh' },
+        'FK': { lat: 56.0019, lon: -3.7839, name: 'Falkirk' },
+        'G': { lat: 55.8642, lon: -4.2518, name: 'Glasgow' },
+        'HS': { lat: 57.7600, lon: -7.0200, name: 'Outer Hebrides' },
+        'IV': { lat: 57.4778, lon: -4.2247, name: 'Inverness' },
+        'KA': { lat: 55.6122, lon: -4.4951, name: 'Kilmarnock' },
+        'KW': { lat: 58.9840, lon: -2.9596, name: 'Kirkwall' },
+        'KY': { lat: 56.1137, lon: -3.1680, name: 'Kirkcaldy' },
+        'ML': { lat: 55.7872, lon: -3.9911, name: 'Motherwell' },
+        'PA': { lat: 55.8456, lon: -4.4248, name: 'Paisley' },
+        'PH': { lat: 56.3950, lon: -3.4308, name: 'Perth' },
+        'TD': { lat: 55.6188, lon: -2.8045, name: 'Galashiels' },
+        'ZE': { lat: 60.1551, lon: -1.1499, name: 'Lerwick' },
+        
+        // Northern Ireland (all use BT)
+        'BT': { lat: 54.5973, lon: -5.9301, name: 'Belfast / Northern Ireland' }
+    };
+
+    // Debounce timer for postcode input
+    let postcodeDebounceTimer = null;
+
+    window.handlePostcodeInput = function(postcode) {
+
+        // Clear previous timer
+        if (postcodeDebounceTimer) {
+            clearTimeout(postcodeDebounceTimer);
+        }
+
+        postcode = postcode.trim().toUpperCase();
+
+        if (postcode.length < 1) {
+            return;
+        }
+
+        // Debounce to avoid excessive updates while typing
+        postcodeDebounceTimer = setTimeout(() => {
+            const locationName = document.getElementById('locationName');
+
+            // Extract postcode area (letters only, strip numbers)
+            const postcodeArea = postcode.replace(/[0-9]/g, '');
+
+            // Look up postcode area in hardcoded data
+            const locationData = postcodeCoordinates[postcodeArea];
+
+            if (locationData) {
+                const lat = locationData.lat;
+                const lon = locationData.lon;
+
+                // Update location display
+                const locationNameEl = document.getElementById('locationName');
+                const locationCoordsEl = document.getElementById('locationCoords');
+                if (locationNameEl) locationNameEl.textContent = `${postcodeArea} - ${locationData.name}`;
+                if (locationCoordsEl) locationCoordsEl.textContent =
+                    `${lat.toFixed(4)}°N, ${Math.abs(lon).toFixed(4)}°${lon < 0 ? 'W' : 'E'}`;
+
+                // Estimate location data based on coordinates
+                estimateLocationData(lat, lon);
+
+                // Update card states
+                updateCardStates();
+                attemptAutoCalculate();
+            } else {
+                // Postcode not found in lookup table
+                if (locationName) {
+                    locationName.textContent = `Postcode area "${postcodeArea}" not found. Try: OX, M, B, LS, SW, EH, CF, BT`;
+                }
+                updateCardStates();
+                attemptAutoCalculate();
+            }
+        }, 300); // 300ms debounce
+
+        // Update card states even if there's an error or empty input
+        updateCardStates();
+        attemptAutoCalculate();
+    };
+
+
+    function estimateLocationData(lat, lon) {
+        // Simple estimation based on latitude
+        // Solar irradiance decreases with latitude in UK (roughly)
+        const baseIrradiance = 1100 - (lat - 50) * 25; // Rough estimate
+        const avgTemp = 12 - (lat - 51) * 0.5;
+
+        // Map to one of the 14 UK DNO license areas (plus NIE Networks for Northern Ireland)
+        let dno = 'Unknown DNO';
+
+        // Northern Ireland
+        if (lon < -5.5 && lat > 54 && lat < 55.5) {
+            dno = 'NIE Networks';
+        }
+        // Scotland - North (Highlands & Islands - SSEN)
+        else if (lat > 58) {
+            dno = 'SSEN Distribution (North Scotland)';
+        }
+        else if (lat > 56.5 && lon < -5) {  // Far west highlands
+            dno = 'SSEN Distribution (North Scotland)';
+        }
+        else if (lat > 57 && lon < -3.5) {  // Northern highlands including Inverness
+            dno = 'SSEN Distribution (North Scotland)';
+        }
+        // Scotland - Central & South (SP Energy Networks) - Edinburgh, Glasgow, Aberdeen belt
+        else if (lat > 55.5 && lat <= 58 && lon >= -4.5 && lon < -2) {
+            dno = 'SP Energy Networks (Central & South Scotland)';
+        }
+        else if (lat > 55 && lat <= 57.5 && lon >= -3.5) {
+            dno = 'SP Energy Networks (Central & South Scotland)';
+        }
+        // North East England (Tyne & Wear, Durham, Teesside) - Newcastle area
+        else if (lat > 54.4 && lat <= 55.5 && lon > -1.9 && lon < -0.5) {
+            dno = 'Northern Powergrid (Northeast)';
+        }
+        // Yorkshire (including Leeds, Bradford, Sheffield)
+        else if (lat > 53.3 && lat <= 54.5 && lon > -1.9 && lon < -0.5) {
+            dno = 'Northern Powergrid (Yorkshire)';
+        }
+        // North West England - Electricity North West (Manchester area)
+        else if (lat > 53 && lat <= 54.5 && lon >= -2.8 && lon < -1.9) {
+            dno = 'Electricity North West';
+        }
+        // North Wales & Merseyside (SP Manweb area)
+        else if ((lat > 53 && lat < 53.8 && lon < -2.8) || // Merseyside/Cheshire
+                 (lat > 52.5 && lat < 53.5 && lon < -3)) { // North Wales
+            dno = 'SP Energy Networks (Manweb)';
+        }
+        // South Wales
+        else if (lat > 51 && lat < 52.5 && lon < -3) {
+            dno = 'National Grid ED (South Wales)';
+        }
+        // South West England
+        else if (lat < 51.5 && lon < -3) {
+            dno = 'National Grid ED (South West)';
+        }
+        // London (roughly inside M25)
+        else if (lat > 51.3 && lat < 51.7 && lon > -0.5 && lon < 0.3) {
+            dno = 'UK Power Networks (London)';
+        }
+        // South East England (UKPN South Eastern)
+        else if (lat > 50.7 && lat < 51.6 && lon > -0.5 && lon < 1.5) {
+            dno = 'UK Power Networks (South Eastern)';
+        }
+        // East of England (UKPN Eastern)
+        else if (lat > 51.5 && lat < 52.8 && lon > -0.3 && lon < 1.8) {
+            dno = 'UK Power Networks (Eastern)';
+        }
+        // Central Southern England (SSEN South)
+        else if (lat > 50.5 && lat < 52 && lon > -2 && lon < -0.5) {
+            dno = 'SSEN Distribution (South)';
+        }
+        // West Midlands
+        else if (lat > 52 && lat < 53.3 && lon > -2.5 && lon < -1.2) {
+            dno = 'National Grid ED (West Midlands)';
+        }
+        // East Midlands
+        else if (lat > 52 && lat < 53.5 && lon >= -1.5 && lon < -0.3) {
+            dno = 'National Grid ED (East Midlands)';
+        }
+        // Fallback for any remaining areas
+        else {
+            dno = 'Regional DNO';
+        }
+
+        // Estimate average carbon intensity based on DNO region (gCO2/kWh)
+        // UK grid average ~2023-2025 data, varies by region due to generation mix
+        let carbonIntensity = 180; // UK average baseline
+
+        // Scotland has higher renewable penetration (wind, hydro)
+        if (dno.includes('Scotland')) {
+            carbonIntensity = 110; // Lower due to wind/hydro
+        }
+        // Wales has mix of renewables and gas
+        else if (dno.includes('Wales')) {
+            carbonIntensity = 160;
+        }
+        // Northern Ireland has limited interconnection
+        else if (dno === 'NIE Networks') {
+            carbonIntensity = 220;
+        }
+        // Northern England (wind farms)
+        else if (dno.includes('Northern Powergrid') || dno.includes('North West')) {
+            carbonIntensity = 170;
+        }
+        // London and South East (high demand, lower local generation)
+        else if (dno.includes('London') || dno.includes('South Eastern')) {
+            carbonIntensity = 190;
+        }
+        // South West (renewables but also gas)
+        else if (dno.includes('South West')) {
+            carbonIntensity = 175;
+        }
+        // Midlands (industrial, mix of gas and coal legacy)
+        else if (dno.includes('Midlands')) {
+            carbonIntensity = 185;
+        }
+        // East/South England
+        else if (dno.includes('Eastern') || dno.includes('SSEN')) {
+            carbonIntensity = 175;
+        }
+
+        // Update display
+        const tempDisplay = document.getElementById('temperatureDisplay');
+        const dnoDisplay = document.getElementById('dnoDisplay');
+        if (tempDisplay) {
+            tempDisplay.innerHTML = `~ ${avgTemp.toFixed(1)}°C`;
+        }
+        if (dnoDisplay) {
+            dnoDisplay.innerHTML = dno;
+        }
+
+        // Create approximate location object
+        currentLocation = {
+            name: 'Custom Location',
+            lat: lat,
+            irradiance: baseIrradiance,
+            avgTemp: avgTemp,
+            winterMin: avgTemp - 8,
+            summerMax: avgTemp + 10,
+            dno: dno,
+            region: 'Custom'
+        };
+
+        generateTemperatureData(currentLocation);
+    }
+
+    // Battery functions
+    window.addBatteryEntry = function(power = '', capacity = '', install = 'indoor') {
+
+        const list = document.getElementById('batteryList');
+        if (!list) return;
+
+        const id = Date.now();
+        const entry = document.createElement('div');
+        entry.className = 'battery-entry';
+        entry.id = `battery-${id}`;
+
+        entry.innerHTML = `<div class="battery-field"> <input type="number" value="${power}" min="0" step="0.1" placeholder="Power" class="battery-power" onchange="updateBatteryTotals()"> <span class="battery-unit">kW</span> </div> <div class="battery-field"> <input type="number" value="${capacity}" min="0" step="0.1" placeholder="Usable Capacity" class="battery-capacity" onchange="updateBatteryTotals()"> <span class="battery-unit">kWh</span> </div> <select class="battery-install" onchange="updateBatteryTotals()"> <option value="indoor" ${install === 'indoor' ? 'selected' : ''}>Indoor</option> <option value="outdoor" ${install === 'outdoor' ? 'selected' : ''}>Outdoor</option> </select> <button class="remove-battery" onclick="removeBatteryEntry('battery-${id}')">×</button>`;
+
+        list.appendChild(entry);
+        updateBatteryTotals();
+
+    };
+
+    window.handleBatteryTypeChange = function(entryId, typeValue) {
+        // No longer needed with new structure
+    };
+
+    window.removeBatteryEntry = function(id) {
+
+        const entry = document.getElementById(id);
+        if (entry) entry.remove();
+        updateBatteryTotals();
+
+    };
+
+    window.updateBatteryTotals = function() {
+
+        const list = document.getElementById('batteryList');
+        if (!list) return;
+
+        let totalPower = 0;
+        let totalCapacity = 0;
+        batteryInstallations = [];
+
+        const entries = list.querySelectorAll('.battery-entry');
+        entries.forEach(entry => {
+            const powerInput = entry.querySelector('.battery-power');
+            const capacityInput = entry.querySelector('.battery-capacity');
+            const installSelect = entry.querySelector('.battery-install');
+
+            if (powerInput && capacityInput && installSelect) {
+                const power = parseFloat(powerInput.value) || 0;
+                const capacity = parseFloat(capacityInput.value) || 0;
+                const installType = installSelect.value;
+
+                if (power > 0 && capacity > 0) {
+                    totalPower += power;
+                    totalCapacity += capacity;
+                    batteryInstallations.push({
+                        power: power,
+                        capacity: capacity,
+                        efficiency: 92, // Default efficiency
+                        installType: installType
+                    });
+                }
+            }
+        });
+
+        // Update battery badge in card title
+        const batteryBadge = document.getElementById('batteryTotalBadge');
+        if (batteryBadge) {
+            batteryBadge.textContent = `${totalPower.toFixed(0)} kW / ${totalCapacity.toFixed(0)} kWh`;
+        }
+
+        // Show/hide battery info display based on whether batteries exist
+        const batteryInfoDisplay = document.getElementById('batteryInfoDisplay');
+        if (batteryInfoDisplay) {
+            if (batteryInstallations.length > 0) {
+                batteryInfoDisplay.classList.add('show');
+            } else {
+                batteryInfoDisplay.classList.remove('show');
+            }
+        }
+
+        attemptAutoCalculate();
+        updateCardStates();
+
+    };
+
+    function getBatteryTotals() {
+        let totalPower = 0;
+        let totalCapacity = 0;
+        batteryInstallations.forEach(b => {
+            totalPower += b.power;
+            totalCapacity += b.capacity;
+        });
+        return { power: totalPower, capacity: totalCapacity };
+    }
+
+    window.updateSolarInverterBadge = function() {
+
+        const solarInverterBadge = document.getElementById('solarInverterBadge');
+        if (!solarInverterBadge) return;
+
+        // Get solar data
+        const solarText = document.getElementById('solarProfile');
+        if (!solarText || !solarText.value.trim()) {
+            solarInverterBadge.textContent = '0 kW';
+            return;
+        }
+
+        const solarData = parseSolarData(solarText.value);
+        if (solarData.length === 0) {
+            solarInverterBadge.textContent = '0 kW';
+            return;
+        }
+
+        // Find maximum generation in the time-series (kWh per 30 minutes)
+        // Multiply by 2 to convert to kW
+        const maxGenerationKWh = Math.max(...solarData);
+        const maxGenerationKW = maxGenerationKWh * 2;
+
+        // Get export limit (if set)
+        const exportLimitInput = document.getElementById('exportLimit');
+        const exportLimit = exportLimitInput && exportLimitInput.value !== ''
+            ? parseFloat(exportLimitInput.value)
+            : Infinity;
+
+        // Inverter size is the minimum of max generation or export limit
+        const inverterSize = Math.min(maxGenerationKW, exportLimit);
+
+        solarInverterBadge.textContent = `${inverterSize.toFixed(0)} kW`;
+
+    };
+
+    function getAdjustedEfficiency(periodIdx, baseEfficiency = 0.92) {
+        if (temperatureData.length === 0 || batteryInstallations.length === 0) {
+            return baseEfficiency;
+        }
+
+        const temp = temperatureData[periodIdx % temperatureData.length] || 15;
+
+        // Calculate weighted efficiency based on installation types
+        let weightedEff = 0;
+        let totalCapacity = 0;
+
+        batteryInstallations.forEach(b => {
+            let installFactor = 1.0;
+            if (b.installType === 'indoor') {
+                installFactor = 1.0;
+            } else if (b.installType === 'sheltered') {
+                const tempDelta = Math.abs(temp - 20);
+                installFactor = 1 - (tempDelta * 0.008);
+            } else {
+                // Outdoor: more aggressive penalty
+                const tempDelta = Math.abs(temp - 20);
+                installFactor = 1 - (tempDelta * 0.015);
+            }
+            weightedEff += b.capacity * baseEfficiency * Math.max(0.55, Math.min(1.0, installFactor));
+            totalCapacity += b.capacity;
+        });
+
+        return totalCapacity > 0 ? weightedEff / totalCapacity : baseEfficiency;
+    }
+
+    // Data parsing functions
+    // Update card enabled/disabled states based on data availability
+    function updateCardStates() {
+        // Get all cards
+        const locationCard = document.getElementById('locationCard');
+        const demandCard = document.getElementById('demandCard');
+        const evCard = document.getElementById('evCard');
+        const solarCard = document.getElementById('solarCard');
+        const ratesCard = document.getElementById('ratesCard');
+        const batteryCard = document.getElementById('batteryCard');
+
+        // Location card is always enabled
+        if (locationCard) locationCard.classList.remove('card-disabled');
+
+        // Check if location is set (postcode entered)
+        const postcodeEl = document.getElementById('postcodeInput');
+        const hasLocation = postcodeEl && postcodeEl.value.trim().length > 0;
+
+        // Demand card: enabled if location is set
+        if (demandCard) {
+            if (hasLocation) {
+                demandCard.classList.remove('card-disabled');
+            } else {
+                demandCard.classList.add('card-disabled');
+            }
+        }
+
+        // Check if demand data is present
+        const demandEl = document.getElementById('demandData');
+        const hasDemand = demandEl && demandEl.value.trim().length > 0;
+
+        // EV card: enabled if demand is set (EV relates to demand)
+        if (evCard) {
+            if (hasDemand) {
+                evCard.classList.remove('card-disabled');
+            } else {
+                evCard.classList.add('card-disabled');
+            }
+        }
+
+        // Solar card: enabled if demand is set (EV is optional, so doesn't gate Solar)
+        if (solarCard) {
+            if (hasDemand) {
+                solarCard.classList.remove('card-disabled');
+            } else {
+                solarCard.classList.add('card-disabled');
+            }
+        }
+
+        // Check if solar data is present
+        const solarEl = document.getElementById('solarProfile');
+        const hasSolar = solarEl && solarEl.value.trim().length > 0;
+
+        // Rates card: enabled if solar is set
+        if (ratesCard) {
+            if (hasSolar) {
+                ratesCard.classList.remove('card-disabled');
+            } else {
+                ratesCard.classList.add('card-disabled');
+            }
+        }
+
+        // Check if tariff data is present
+        const tariffEl = document.getElementById('tariffData');
+        const hasTariff = tariffEl && tariffEl.value.trim().length > 0;
+
+        // Check if standing charge is present
+        const standingChargeEl = document.getElementById('standingCharge');
+        const hasStandingCharge = standingChargeEl && standingChargeEl.value.trim().length > 0;
+
+        // Battery card: enabled if all rates fields are set (tariff + standing charge)
+        if (batteryCard) {
+            if (hasTariff && hasStandingCharge) {
+                batteryCard.classList.remove('card-disabled');
+            } else {
+                batteryCard.classList.add('card-disabled');
+            }
+        }
+
+        // Scenario cards: enabled only if all preceding cards are complete
+        const scenarioContainer = document.getElementById('scenarioCardsContainer');
+        if (scenarioContainer) {
+            // Check if all prerequisites are met
+            const allComplete = hasLocation && hasDemand && hasSolar && hasTariff && hasStandingCharge && batteryInstallations.length > 0;
+            
+            if (allComplete) {
+                scenarioContainer.classList.remove('card-disabled');
+            } else {
+                scenarioContainer.classList.add('card-disabled');
+            }
+        }
+    }
+
+    function parseDemandData(text) {
+        const lines = text.trim().split('\n');
+        const data = [];
+
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            if (line.toLowerCase().includes('date') || line.toLowerCase().includes('demand')) continue;
+
+            const parts = line.split('\t');
+            if (parts.length >= 2) {
+                const value = parseFloat(parts[1].trim());
+                if (!isNaN(value)) data.push(value);
+            }
+        }
+        return data;
+    }
+
+    function updateDemandInfo(demandData) {
+
+        const infoDisplay = document.getElementById('demandInfoDisplay');
+        const annualDisplay = document.getElementById('annualDemandDisplay');
+        const curtailedDisplay = document.getElementById('curtailedDemandDisplay');
+
+        if (!infoDisplay || !annualDisplay || !curtailedDisplay) return;
+
+        // Calculate annual demand
+        const annualDemand = demandData.reduce((sum, val) => sum + val, 0);
+
+        // Calculate maximum consumption per period
+        const maxConsumption = Math.max(...demandData);
+
+        // Update display
+        annualDisplay.textContent = Math.round(annualDemand).toLocaleString();
+        curtailedDisplay.textContent = maxConsumption.toFixed(2);
+
+        infoDisplay.classList.add('show');
+
+    }
+
+    function updateImportLimitInfo() {
+        // Update demand curtailment if demand data exists
+        const demandTextarea = document.getElementById('demandData');
+        if (demandTextarea && demandTextarea.value.trim()) {
+            const demandData = parseDemandData(demandTextarea.value);
+            if (demandData.length > 0) {
+                updateDemandInfo(demandData);
+            }
+        }
+    }
+
+    function parseSolarData(text) {
+        const lines = text.trim().split('\n');
+        const data = [];
+
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            if (line.toLowerCase().includes('date') || line.toLowerCase().includes('solar') || line.toLowerCase().includes('generation')) continue;
+
+            const parts = line.split('\t');
+            if (parts.length >= 2) {
+                const value = parseFloat(parts[1].trim());
+                if (!isNaN(value)) data.push(value);
+            }
+        }
+        return data;
+    }
+
+    function updateSolarInfo(solarData) {
+
+        const infoDisplay = document.getElementById('solarInfoDisplay');
+        const annualDisplay = document.getElementById('annualGenerationDisplay');
+        const selfConsumptionDisplay = document.getElementById('selfConsumptionGenerationDisplay');
+        const excessGenerationExportedDisplay = document.getElementById('excessGenerationExportedDisplay');
+        const curtailedDisplay = document.getElementById('curtailedGenerationDisplay');
+
+        if (!infoDisplay || !annualDisplay || !curtailedDisplay) return;
+
+        // Calculate annual generation
+        const annualGeneration = solarData.reduce((sum, val) => sum + val, 0);
+
+        // Get export limit
+        const exportLimitEl = document.getElementById('exportLimit');
+        const exportLimit = exportLimitEl && exportLimitEl.value ? parseFloat(exportLimitEl.value) : null;
+
+        // Calculate self-consumption and excess generation exported
+        let selfConsumption = 0;
+        let excessGenerationExported = 0;
+        let curtailedGeneration = 0;  // Track curtailment in calculation
+
+        const demandText = document.getElementById('demandData');
+        if (demandText && demandText.value.trim()) {
+            const demandData = parseDemandData(demandText.value);
+            const periods = Math.min(demandData.length, solarData.length);
+
+            for (let i = 0; i < periods; i++) {
+                const solar = solarData[i];
+                const demand = demandData[i];
+
+                // Self-consumption: solar used to offset demand (independent of export limit)
+                const solarUsedForConsumption = Math.min(demand, solar);
+                selfConsumption += solarUsedForConsumption;
+
+                // Potential excess generation (before export limit applied)
+                const potentialExcess = Math.max(0, solar - demand);
+                
+                // Apply export limit to determine actual export
+                let gridExport = potentialExcess;
+                if (exportLimit !== null && exportLimit >= 0) {
+                    const maxExport = exportLimit * 0.5; // kWh per half-hour
+                    gridExport = Math.min(potentialExcess, maxExport);
+                }
+                excessGenerationExported += gridExport;
+                
+                // Track curtailment (excess that can't be exported)
+                if (exportLimit !== null && exportLimit >= 0) {
+                    const maxExport = exportLimit * 0.5; // kWh per half-hour
+                    const curtailed = Math.max(0, potentialExcess - maxExport);
+                    curtailedGeneration += curtailed;
+                }
+            }
+        }
+
+        // Update display
+        annualDisplay.textContent = Math.round(annualGeneration).toLocaleString();
+        if (selfConsumptionDisplay) {
+            selfConsumptionDisplay.textContent = Math.round(selfConsumption).toLocaleString();
+        }
+        if (excessGenerationExportedDisplay) {
+            excessGenerationExportedDisplay.textContent = Math.round(excessGenerationExported).toLocaleString();
+        }
+        if (exportLimit !== null && exportLimit >= 0) {
+            curtailedDisplay.textContent = Math.round(curtailedGeneration).toLocaleString();
+        } else {
+            curtailedDisplay.textContent = '0';
+        }
+
+        infoDisplay.classList.add('show');
+
+        // Update solar inverter badge
+        updateSolarInverterBadge();
+
+    }
+
+    function parseTariff(text) {
+        const lines = text.trim().split('\n');
+        const importRates = [];
+        const exportRates = [];
+
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            if (line.toLowerCase().includes('time') || line.toLowerCase().includes('import') || line.toLowerCase().includes('export')) continue;
+
+            const parts = line.split('\t');
+            if (parts.length >= 3) {
+                const imp = parseFloat(parts[1].trim());
+                const exp = parseFloat(parts[2].trim());
+                if (!isNaN(imp) && !isNaN(exp)) {
+                    importRates.push(imp);
+                    exportRates.push(exp);
+                }
+            }
+        }
+
+        if (importRates.length !== 48 || exportRates.length !== 48) {
+            throw new Error(`Expected 48 tariff periods, got ${importRates.length}`);
+        }
+
+        const standingEl = document.getElementById('standingCharge');
+        const standing = standingEl ? (parseFloat(standingEl.value) || 50) : 50;
+
+        return { import: importRates, export: exportRates, standing: standing };
+    }
+
+    // Preset loading functions
+    window.loadDemandProfile = function(profileId) {
+
+        if (!profileId) return;
+        let data = [];
+        const periodsPerDay = 48;
+        const daysInYear = 365;
+
+        // Generate synthetic demand profiles
+        const profiles = {
+            office_small: { base: 8, peak: 15, annual: 150000 },
+            office_medium: { base: 18, peak: 35, annual: 350000 },
+            warehouse: { base: 30, peak: 60, annual: 600000 },
+            retail: { base: 20, peak: 40, annual: 400000 }
+        };
+
+        const profile = profiles[profileId];
+        if (!profile) return;
+
+        // Scale factor to match annual consumption
+        const baseAnnual = profile.base * periodsPerDay * daysInYear;
+        const scaleFactor = profile.annual / baseAnnual;
+
+        for (let day = 0; day < daysInYear; day++) {
+            const isWeekend = (day % 7) >= 5;
+            const dayOfYear = day + 1;
+            const seasonalFactor = 1 + 0.2 * Math.cos((dayOfYear - 172) * 2 * Math.PI / 365);
+
+            for (let period = 0; period < periodsPerDay; period++) {
+                const hour = period / 2;
+                let value = profile.base;
+
+                // Working hours peak (8am - 6pm weekdays)
+                if (!isWeekend && hour >= 8 && hour <= 18) {
+                    value = profile.base + (profile.peak - profile.base) * (1 - Math.abs(hour - 13) / 5);
+                } else if (isWeekend) {
+                    value = profile.base * 0.4;
+                } else {
+                    value = profile.base * 0.3;
+                }
+
+                value *= seasonalFactor * scaleFactor;
+                value += (Math.random() - 0.5) * value * 0.1;
+                data.push(Math.max(0, value));
+            }
+        }
+
+        // Format as text
+        let text = '';
+        const startDate = new Date(2024, 0, 1);
+        for (let i = 0; i < data.length; i++) {
+            const date = new Date(startDate.getTime() + Math.floor(i / 48) * 24 * 60 * 60 * 1000);
+            const period = i % 48;
+            const hours = Math.floor(period / 2);
+            const mins = (period % 2) * 30;
+            const dateStr = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+            text += `${dateStr} ${timeStr}\t${data[i].toFixed(1)}\n`;
+        }
+
+        const el = document.getElementById('demandData');
+        if (el) el.value = text;
+
+        attemptAutoCalculate();
+
+    };
+
+    window.loadSolarProfile = function(profileId) {
+
+        if (!profileId) return;
+        const systems = {
+            solar_100kwp: { capacity: 100 },
+            solar_250kwp: { capacity: 250 },
+            solar_500kwp: { capacity: 500 }
+        };
+
+        const system = systems[profileId];
+        if (!system) return;
+
+        const irradiance = currentLocation ? currentLocation.irradiance : 900;
+        const lat = currentLocation ? currentLocation.lat : 51.5;
+
+        let data = [];
+        const periodsPerDay = 48;
+        const daysInYear = 365;
+
+        for (let day = 0; day < daysInYear; day++) {
+            const dayOfYear = day + 1;
+
+            // Day length variation
+            const declinationAngle = 23.45 * Math.sin((284 + dayOfYear) * 2 * Math.PI / 365);
+            const latRad = lat * Math.PI / 180;
+            const declRad = declinationAngle * Math.PI / 180;
+            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(declRad));
+            const dayLength = 2 * hourAngle * 12 / Math.PI;
+            const sunrise = 12 - dayLength / 2;
+            const sunset = 12 + dayLength / 2;
+
+            // Daily peak generation (seasonal variation)
+            const seasonalFactor = 0.3 + 0.7 * Math.cos((dayOfYear - 172) * 2 * Math.PI / 365);
+            const dailyPeak = system.capacity * (irradiance / 1000) * seasonalFactor / 1000;
+
+            for (let period = 0; period < periodsPerDay; period++) {
+                const hour = period / 2;
+                let generation = 0;
+
+                if (hour >= sunrise && hour <= sunset) {
+                    const solarNoon = 12;
+                    const hourFromNoon = Math.abs(hour - solarNoon);
+                    const maxHoursFromNoon = dayLength / 2;
+                    generation = dailyPeak * Math.cos(hourFromNoon / maxHoursFromNoon * Math.PI / 2);
+                    generation *= (0.8 + Math.random() * 0.4); // Cloud variability
+                }
+
+                data.push(Math.max(0, generation));
+            }
+        }
+
+        // Format as text
+        let text = '';
+        const startDate = new Date(2024, 0, 1);
+        for (let i = 0; i < data.length; i++) {
+            const date = new Date(startDate.getTime() + Math.floor(i / 48) * 24 * 60 * 60 * 1000);
+            const period = i % 48;
+            const hours = Math.floor(period / 2);
+            const mins = (period % 2) * 30;
+            const dateStr = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+            text += `${dateStr} ${timeStr}\t${data[i].toFixed(2)}\n`;
+        }
+
+        const el = document.getElementById('solarProfile');
+        if (el) el.value = text;
+
+        attemptAutoCalculate();
+
+    };
+
+    window.loadTariff = function(tariffId) {
+
+        if (!tariffId) return;
+        const tariffs = {
+            octopus_go: { offPeakStart: 0.5, offPeakEnd: 4.5, offPeakRate: 7.5, peakRate: 30, export: 4.1 },
+            economy7: { offPeakStart: 0, offPeakEnd: 7, offPeakRate: 12, peakRate: 28, export: 5 },
+            flat_rate: { offPeakStart: 0, offPeakEnd: 0, offPeakRate: 28, peakRate: 28, export: 6 },
+            tou_commercial: { offPeakStart: 22, offPeakEnd: 6, offPeakRate: 15, peakRate: 35, export: 5.5 }
+        };
+
+        const tariff = tariffs[tariffId];
+        if (!tariff) return;
+
+        let text = 'Time\tImport\tExport\n';
+        for (let period = 0; period < 48; period++) {
+            const hour = period / 2;
+            const hours = Math.floor(period / 2);
+            const mins = (period % 2) * 30;
+            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+
+            let rate;
+            if (tariff.offPeakStart <= tariff.offPeakEnd) {
+                rate = (hour >= tariff.offPeakStart && hour < tariff.offPeakEnd) ? tariff.offPeakRate : tariff.peakRate;
+            } else {
+                rate = (hour >= tariff.offPeakStart || hour < tariff.offPeakEnd) ? tariff.offPeakRate : tariff.peakRate;
+            }
+
+            text += `${timeStr}\t${rate.toFixed(1)}\t${tariff.export.toFixed(1)}\n`;
+        }
+
+        const el = document.getElementById('tariffData');
+        if (el) el.value = text;
+
+        updateTariffInfo();
+
+    };
+
+    window.updateTariffInfo = function() {
+
+        const tariffText = document.getElementById('tariffData');
+        const infoDisplay = document.getElementById('tariffInfoDisplay');
+        const demandCostDisplay = document.getElementById('demandCostDisplay');
+        const totalCostDisplay = document.getElementById('totalCostDisplay');
+        const earningsDisplay = document.getElementById('earningsDisplay');
+        const standingYearDisplay = document.getElementById('standingChargeYearDisplay');
+        const costOfEnergyDisplay = document.getElementById('costOfEnergyDisplay');
+
+        if (!tariffText || !tariffText.value.trim()) {
+            return;
+        }
+
+        const tariff = parseTariff(tariffText.value);
+
+        const standingChargeYear = tariff.standing * 365;
+
+        // Update standing charge
+        if (standingYearDisplay) {
+            standingYearDisplay.textContent = `£${(standingChargeYear / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Try to get demand and solar data
+        const demandText = document.getElementById('demandData');
+        const solarText = document.getElementById('solarProfile');
+
+        if (!demandText || !demandText.value.trim()) {
+            // Not enough data to calculate costs
+            if (demandCostDisplay) demandCostDisplay.textContent = '£-';
+            const selfConsumptionSavingDisplay = document.getElementById('selfConsumptionSavingDisplay');
+            if (selfConsumptionSavingDisplay) selfConsumptionSavingDisplay.textContent = '(£-)';
+            const standingYearDisplay = document.getElementById('standingChargeYearDisplay');
+            if (standingYearDisplay) standingYearDisplay.textContent = '£-';
+            if (earningsDisplay) earningsDisplay.textContent = '(£-)';
+            const totalEarningsDisplay = document.getElementById('totalEarningsDisplay');
+            if (totalEarningsDisplay) totalEarningsDisplay.textContent = '(£-)';
+            const netCostDisplay = document.getElementById('netCostDisplay');
+            if (netCostDisplay) netCostDisplay.textContent = '£-';
+            const costPerUnitDisplay = document.getElementById('costPerUnitDisplay');
+            if (costPerUnitDisplay) costPerUnitDisplay.textContent = '£-';
+            if (costOfEnergyDisplay) costOfEnergyDisplay.textContent = '£- per kWh';
+            attemptAutoCalculate();
+            return;
+        }
+
+        // Parse demand and solar data
+        const demandData = parseDemandData(demandText.value);
+        const solarData = solarText && solarText.value.trim() ? parseSolarData(solarText.value) : [];
+
+        if (demandData.length === 0) {
+            if (demandCostDisplay) demandCostDisplay.textContent = '£-';
+            const selfConsumptionSavingDisplay = document.getElementById('selfConsumptionSavingDisplay');
+            if (selfConsumptionSavingDisplay) selfConsumptionSavingDisplay.textContent = '(£-)';
+            const standingYearDisplay = document.getElementById('standingChargeYearDisplay');
+            if (standingYearDisplay) standingYearDisplay.textContent = '£-';
+            if (earningsDisplay) earningsDisplay.textContent = '(£-)';
+            const totalEarningsDisplay = document.getElementById('totalEarningsDisplay');
+            if (totalEarningsDisplay) totalEarningsDisplay.textContent = '(£-)';
+            const netCostDisplay = document.getElementById('netCostDisplay');
+            if (netCostDisplay) netCostDisplay.textContent = '£-';
+            const costPerUnitDisplay = document.getElementById('costPerUnitDisplay');
+            if (costPerUnitDisplay) costPerUnitDisplay.textContent = '£-';
+            if (costOfEnergyDisplay) costOfEnergyDisplay.textContent = '£- per kWh';
+            attemptAutoCalculate();
+            return;
+        }
+
+        // Check if standing charge has a value
+        const standingChargeEl = document.getElementById('standingCharge');
+        if (!standingChargeEl || !standingChargeEl.value.trim()) {
+            // Standing charge not entered, don't calculate
+            if (demandCostDisplay) demandCostDisplay.textContent = '£-';
+            const selfConsumptionSavingDisplay = document.getElementById('selfConsumptionSavingDisplay');
+            if (selfConsumptionSavingDisplay) selfConsumptionSavingDisplay.textContent = '(£-)';
+            const standingYearDisplay = document.getElementById('standingChargeYearDisplay');
+            if (standingYearDisplay) standingYearDisplay.textContent = '£-';
+            if (earningsDisplay) earningsDisplay.textContent = '(£-)';
+            const totalEarningsDisplay = document.getElementById('totalEarningsDisplay');
+            if (totalEarningsDisplay) totalEarningsDisplay.textContent = '(£-)';
+            if (costOfEnergyDisplay) costOfEnergyDisplay.textContent = '£- per kWh';
+            const netCostDisplay = document.getElementById('netCostDisplay');
+            if (netCostDisplay) netCostDisplay.textContent = '£-';
+            const costPerUnitDisplay = document.getElementById('costPerUnitDisplay');
+            if (costPerUnitDisplay) costPerUnitDisplay.textContent = '£-';
+            return;
+        }
+
+        // Calculate base demand cost (without EV)
+        let baseDemandEnergy = 0;
+        let baseDemandCost = 0;
+        let selfConsumptionSaving = 0;
+
+        for (let i = 0; i < demandData.length; i++) {
+            const period = i % 48;
+            const importRate = tariff.import[period];
+            const demand = demandData[i];
+
+            baseDemandEnergy += demand;
+            baseDemandCost += demand * importRate;
+
+            // Calculate self-consumption saving if solar data exists
+            if (solarData.length > 0 && i < solarData.length) {
+                let solar = solarData[i];
+                const exportLimitEl = document.getElementById('exportLimit');
+                const exportLimit = exportLimitEl && exportLimitEl.value !== '' ? parseFloat(exportLimitEl.value) : null;
+
+                if (exportLimit !== null && exportLimit >= 0) {
+                    const maxExport = exportLimit * 0.5;
+                    solar = Math.min(solar, maxExport);
+                }
+
+                const solarUsedForConsumption = Math.min(demand, solar);
+                selfConsumptionSaving += solarUsedForConsumption * importRate;
+            }
+        }
+
+        // Calculate export revenue if solar data exists
+        let exportRevenue = 0;
+        if (solarData.length > 0) {
+            const exportLimitEl = document.getElementById('exportLimit');
+            const exportLimit = exportLimitEl && exportLimitEl.value !== '' ? parseFloat(exportLimitEl.value) : null;
+
+            const periods = Math.min(demandData.length, solarData.length);
+
+            for (let i = 0; i < periods; i++) {
+                const period = i % 48;
+                const exportRate = tariff.export[period];
+
+                let demand = demandData[i];
+                let solar = solarData[i];
+
+                // Apply export limit (curtail solar if needed)
+                if (exportLimit !== null && exportLimit >= 0) {
+                    const maxExport = exportLimit * 0.5; // kWh per half-hour
+                    solar = Math.min(solar, maxExport);
+                }
+
+                // Calculate grid export for this period
+                const gridExport = Math.max(0, solar - demand);
+                exportRevenue += gridExport * exportRate;
+            }
+        }
+
+        // Calculate total cost and average cost per kWh
+        const totalCostBeforeExport = baseDemandCost - selfConsumptionSaving;
+        const totalCostWithStanding = totalCostBeforeExport + standingChargeYear; // All in pence
+        const totalEnergy = baseDemandEnergy;
+        const netCost = totalCostWithStanding - exportRevenue; // Net cost after earnings
+        const costPerUnit = totalEnergy > 0 ? netCost / totalEnergy / 100 : 0; // Convert pence to pounds
+
+        // Store for battery display
+        window.solarSelfConsumptionSaving = selfConsumptionSaving;
+        window.solarExportRevenue = exportRevenue;
+        window.baseDemandCost = baseDemandCost;
+
+        // Update display
+        if (demandCostDisplay) {
+            demandCostDisplay.textContent = `£${(baseDemandCost / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        const selfConsumptionSavingDisplay = document.getElementById('selfConsumptionSavingDisplay');
+        if (selfConsumptionSavingDisplay) {
+            selfConsumptionSavingDisplay.textContent = `(£${(selfConsumptionSaving / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
+        }
+
+        if (standingYearDisplay) {
+            standingYearDisplay.textContent = `£${(standingChargeYear / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+        if (earningsDisplay) {
+            earningsDisplay.textContent = `(£${(exportRevenue / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
+        }
+
+        const totalEarningsDisplay = document.getElementById('totalEarningsDisplay');
+        if (totalEarningsDisplay) {
+            totalEarningsDisplay.textContent = `(£${(exportRevenue / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})})`;
+        }
+
+        const netCostDisplay = document.getElementById('netCostDisplay');
+        if (netCostDisplay) {
+            netCostDisplay.textContent = `£${(netCost / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        const costPerUnitDisplay = document.getElementById('costPerUnitDisplay');
+        if (costPerUnitDisplay) {
+            costPerUnitDisplay.textContent = `£${costPerUnit.toLocaleString('en-GB', {minimumFractionDigits: 4, maximumFractionDigits: 4})}`;
+        }
+
+        attemptAutoCalculate();
+
+    };
+
+    // Display scenario cards function
+    function displayScenarioCards(r) {
+        const fmt = (v) => {
+            if (v === undefined || v === null || isNaN(v)) return '£ -';
+            return '£' + (v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        };
+        const fmtParen = (v) => {
+            if (v === undefined || v === null || isNaN(v)) return '(£ -)';
+            return v >= 0 ? '£' + (v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '(£' + Math.abs(v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ')';
+        };
+
+        // Helper function to create scenario card HTML matching battery card exactly
+        const createScenarioHTML = (title, label, titleColor, items, netCost, totalDemand, comparisons, costPerUnitComparison) => {
+            const costPerUnit = (totalDemand && totalDemand > 0 && netCost !== undefined && !isNaN(netCost)) 
+                ? (netCost / totalDemand / 100) 
+                : 0;
+            const costPerUnitStr = !isNaN(costPerUnit) && costPerUnit > 0 
+                ? costPerUnit.toFixed(4) 
+                : '£ -';
+            
+            // Calculate cost per unit comparison if baseline provided (absolute difference in £/kWh)
+            let costPerUnitComparisonHTML = '';
+            if (costPerUnitComparison !== undefined && costPerUnit > 0 && costPerUnitComparison > 0) {
+                const costDifference = costPerUnit - costPerUnitComparison;
+                const arrow = costDifference > 0 ? '↑' : costDifference < 0 ? '↓' : '→';
+                const formattedDiff = Math.abs(costDifference).toFixed(4);
+                costPerUnitComparisonHTML = `<span>${arrow}</span> <span>£${formattedDiff} per kWh</span>`;
+            }
+            
+            let itemsHTML = items.map((item, idx, arr) => {
+                let comparisonHTML = '';
+                if (comparisons && comparisons[item.label]) {
+                    const baseline = comparisons[item.label];
+                    // Extract numeric values (as positive)
+                    let currentValue = parseFloat(item.value.replace(/[^0-9.-]/g, ''));
+                    let baselineValue = parseFloat(baseline.replace(/[^0-9.-]/g, ''));
+                    const isEarning = item.value.includes('(') && item.value.includes(')');
+                    
+                    if (!isNaN(currentValue) && !isNaN(baselineValue)) {
+                        const difference = currentValue - baselineValue;
+                        
+                        // For earnings: more earnings = good (down arrow, green)
+                        // For costs: less cost = good (down arrow, green)
+                        let arrow, arrowColor;
+                        if (isEarning) {
+                            // Earnings: positive difference = more earnings = down green
+                            arrow = difference > 0 ? '↓' : difference < 0 ? '↑' : '→';
+                            arrowColor = difference > 0 ? '#64b664' : difference < 0 ? '#d4694a' : '#999999';
+                        } else {
+                            // Costs: negative difference = less cost = down green
+                            arrow = difference > 0 ? '↑' : difference < 0 ? '↓' : '→';
+                            arrowColor = difference > 0 ? '#d4694a' : difference < 0 ? '#64b664' : '#999999';
+                        }
+                        
+                        const formattedDiff = '£' + Math.abs(difference).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        comparisonHTML = `<div style="font-size: 0.7rem; color: ${arrowColor}; font-weight: 500; margin-top: 2px;">${arrow} ${formattedDiff}</div>`;
+                    } else {
+                        comparisonHTML = `<div style="font-size: 0.7rem; color: #999999; font-weight: 500; margin-top: 2px;">(£ -)</div>`;
+                    }
+                } else if (comparisons) {
+                    // Show (£ -) for items that exist in Levelise but not in comparisons
+                    comparisonHTML = `<div style="font-size: 0.7rem; color: #999999; font-weight: 500; margin-top: 2px;">(£ -)</div>`;
+                }
+                
+                return `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 16px;">
+                    <span style="color: #000000; font-weight: 500; font-size: 0.875rem; flex: 1;">${item.label}<br><span style="font-size: 0.7rem; font-weight: 400; color: #999999;">${item.description}</span></span>
+                    <span style="text-align: right; white-space: nowrap; margin-left: 16px;">
+                        <div style="color: #000000; font-weight: 600; font-size: 0.875rem; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums;">${item.value}</div>
+                        ${comparisonHTML}
+                    </span>
+                </div>
+            `}).join('');
+            
+            // Calculate comparison for Total Net Cost if comparisons provided
+            let totalNetCostComparisonHTML = '';
+            if (comparisons) {
+                if (comparisons['Total Net Cost']) {
+                    const baseline = comparisons['Total Net Cost'];
+                    const currentValue = netCost / 100;  // Convert pence to pounds
+                    const baselineValue = parseFloat(baseline.replace(/[^0-9.-]/g, ''));
+                    
+                    if (!isNaN(currentValue) && !isNaN(baselineValue)) {
+                        const difference = currentValue - baselineValue;
+                        const arrow = difference > 0 ? '↑' : difference < 0 ? '↓' : '→';
+                        const formattedDiff = '£' + Math.abs(difference).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        totalNetCostComparisonHTML = `<span>${arrow}</span> <span>${formattedDiff}</span>`;
+                    } else {
+                        totalNetCostComparisonHTML = `£ -`;
+                    }
+                } else {
+                    // Show £ - for Total Net Cost when comparisons object exists but no data
+                    totalNetCostComparisonHTML = `£ -`;
+                }
+            }
+            
+            return `
+                <div class="location-display rates-info">
+                    <div class="info-section-header" style="background: rgba(${titleColor === '#64b664' ? '100,182,100' : '2,142,175'}, 0.02);">
+                        <h3 style="color: ${titleColor};">${label}</h3>
+                        <span class="baseline-label" style="color: ${titleColor};">${title}</span>
+                    </div>
+                    
+                    ${itemsHTML}
+                    
+                    <div class="info-section-total">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px;">
+                            <div class="total-label" style="color: #ffffff;">Cost per Unit</div>
+                            <div class="total-label" style="text-align: right; color: #ffffff;">ENERGY BILL</div>
+                            
+                            <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; color: #ffffff;">
+                                <span>£${costPerUnitStr === '£ -' ? '-' : costPerUnitStr}</span><span style="font-size: 0.75rem; opacity: 0.8;"> per kWh</span>
+                            </div>
+                            <div style="font-size: 1.125rem; font-weight: 700; font-family: 'Inter', sans-serif; font-variant-numeric: tabular-nums; color: #ffffff; text-align: right;">
+                                ${fmt(netCost)}
+                            </div>
+                            
+                            <div style="font-size: 0.7rem; font-weight: 500; margin-top: 6px; line-height: 1; color: #ffffff;">
+                                ${costPerUnitComparisonHTML}
+                            </div>
+                            <div style="font-size: 0.7rem; font-weight: 500; margin-top: 6px; line-height: 1; color: #ffffff; text-align: right;">
+                                ${totalNetCostComparisonHTML}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        // Solar scenario items
+        const solarItems = [
+            { label: 'Consumption', description: '(Half-hourly Consumption × Rates)', value: fmt(r.baselineDemandCost) },
+            { label: 'Standing Charge', description: '(Daily Charge × 365)', value: fmt(r.standingChargeYear) }
+        ];
+        if (r.solarDemandSaving) {
+            solarItems.push({ label: 'Demand Reduction', description: '(Self-Consumption × Rates)', value: fmtParen(-(r.solarDemandSaving)) });
+        }
+        // Always include Excess Solar
+        solarItems.push({ label: 'Excess Solar', description: '(Exported Generation × Rates)', value: fmtParen(-(r.solarExportSaving || 0)) });
+
+        // With Levelise scenario items
+        const leveliseItems = [
+            { label: 'Consumption', description: '(Half-hourly Consumption × Rates)', value: fmt(r.baselineDemandCost) },
+            { label: 'Standing Charge', description: '(Daily Charge × 365)', value: fmt(r.standingChargeYear || r.leveliseStandingCharge) },
+            { label: 'Demand Reduction', description: '(Self-Consumption × Rates)', value: fmtParen(-(r.leveliseBatteryDemandReduction || 0)) },
+            { label: 'Excess Solar', description: '(Exported Generation × Rates)', value: fmtParen(-(r.leveliseExportRevenue || 0)) },
+            { label: 'Off-peak Charging', description: '(Grid Discharge × Rates) - (Grid Charge × Rates)', value: fmtParen(-(r.leveliseRatesArbitrage || 0)) },
+            { label: 'Flexibility', description: '(Direct Payments from Levelise)', value: fmtParen(-((r.leveliseCapacityRevenue || 0) + (r.leveliseResponseRevenue || 0))) }
+        ];
+
+        // Display solar scenario
+        const solarCard = document.getElementById('solarScenarioCard');
+        let solarCostPerUnit = 0;
+        if (solarCard) {
+            // Calculate percentage reduction
+            const solarReductionPercent = r.baseline > 0 ? ((r.baseline - r.withSolar) / r.baseline * 100).toFixed(1) : 0;
+            // Calculate solar cost per unit for comparison
+            solarCostPerUnit = r.annualDemand > 0 ? (r.withSolar / r.annualDemand / 100) : 0;
+            // Solar scenario is the baseline - no comparisons shown
+            const solarHTML = createScenarioHTML('SOLAR', `${solarReductionPercent}%`, '#64b664', solarItems, r.withSolar, r.annualDemand, null);
+            if (solarHTML) {
+                solarCard.innerHTML = solarHTML;
+                solarCard.classList.remove('card-disabled');
+            }
+        }
+
+        // Create comparisons object for Levelise scenario (vs Solar)
+        const leveliseComparisons = {
+            'Consumption': fmt(r.baselineDemandCost),
+            'Standing Charge': fmt(r.standingChargeYear),
+            'Demand Reduction': fmtParen(-(r.solarDemandSaving || 0)),
+            'Excess Solar': fmtParen(-(r.solarExportSaving || 0)),
+            'Off-peak Charging': '£0.00',  // Solar has no off-peak charging, baseline £0.00
+            'Flexibility': '£0.00',  // New feature (Capacity + Response), compare against £0.00
+            'Total Net Cost': fmt(r.withSolar)  // Used for total cost comparison
+        };
+
+        // Display with Levelise scenario
+        const leveliseCard = document.getElementById('leveliseScenarioCard');
+        if (leveliseCard) {
+            // Calculate percentage reduction
+            const leveliseReductionPercent = r.baseline > 0 ? ((r.baseline - r.withLevelise) / r.baseline * 100).toFixed(1) : 0;
+            const leveliseHTML = createScenarioHTML('SOLAR + BATTERY', `${leveliseReductionPercent}%`, '#028eaf', leveliseItems, r.withLevelise, r.annualDemand, leveliseComparisons, solarCostPerUnit);
+            if (leveliseHTML) {
+                leveliseCard.innerHTML = leveliseHTML;
+                leveliseCard.classList.remove('card-disabled');
+            }
+        }
+        
+        // Show scenario cards container when calculations are complete
+        const scenarioCardsContainer = document.getElementById('scenarioCardsContainer');
+        if (scenarioCardsContainer) {
+            scenarioCardsContainer.style.display = 'block';
+            scenarioCardsContainer.classList.remove('card-disabled');
+        }
+    }
+
+    // Main calculation
+    function calculateSavings() {
+        const results = document.getElementById('resultsCard');
+
+        const demandEl = document.getElementById('demandData');
+        const solarEl = document.getElementById('solarProfile');
+        const tariffEl = document.getElementById('tariffData');
+
+        if (!demandEl || !solarEl || !tariffEl) {
+            throw new Error('Required input fields not found');
+        }
+
+        const demand = parseDemandData(demandEl.value);
+        if (!demand.length) throw new Error('No demand data found');
+
+        const tariff = parseTariff(tariffEl.value);
+        const standingChargeYear = tariff.standing * 365;
+
+        let solar = parseSolarData(solarEl.value);
+        if (!solar.length) throw new Error('No solar data found');
+
+        const battery = getBatteryTotals();
+        if (battery.power === 0 || battery.capacity === 0) {
+            throw new Error('Please add at least one battery system');
+        }
+
+        // Get export settings
+        const exportLimitEl = document.getElementById('exportLimit');
+        const exportLimitValue = exportLimitEl ? exportLimitEl.value.trim() : '';
+
+        // Empty = unlimited, 0 = no export, positive = kW limit
+        let exportAllowed = true;
+        let exportLimitPerPeriod = Infinity;
+
+        if (exportLimitValue !== '') {
+            const exportLimit = parseFloat(exportLimitValue);
+            if (exportLimit === 0) {
+                exportAllowed = false;
+                exportLimitPerPeriod = 0;
+            } else if (exportLimit > 0) {
+                exportLimitPerPeriod = exportLimit * 0.5; // kWh per half-hour
+            }
+        }
+
+        // Get import settings
+        const importLimitEl = document.getElementById('importLimit');
+        const importLimitValue = importLimitEl ? importLimitEl.value.trim() : '';
+
+        // Empty = unlimited, positive = kW limit
+        let importLimitPerPeriod = Infinity;
+
+        if (importLimitValue !== '') {
+            const importLimit = parseFloat(importLimitValue);
+            if (importLimit > 0) {
+                importLimitPerPeriod = importLimit * 0.5; // kWh per half-hour
+            }
+        }
+
+        // Run simulation
+        let baselineCost = 0;
+        let solarCost = 0;
+        let leveliseCost = 0;
+        let leveliseRevenue = 0;
+
+        // Solar scenario breakdown for scenario display
+        let solarDemandReductionValue = 0;  // Self-consumed solar × import rate
+        let solarExportValue = 0;  // Exported solar × export rate
+
+        // Levelise cost breakdown for battery info display
+        let leveliseDemandImportCost = 0;
+        let leveliseExportRevenue = 0;
+        let leveliseStandingCharge = 0;
+        let leveliseBatteryDemandReduction = 0;  // Solar partition discharge × import rate (demand reduction)
+        let leveliseRatesArbitrage = 0;  // Grid partition discharge value - grid charge cost (buy low, sell high)
+        let leveliseCapacityRevenue = 0;  // Capacity revenue user share (70%)
+        let leveliseResponseRevenue = 0;  // Response revenue from unused inverter capacity
+        let totalAvailableCapacity = 0;  // Track total available capacity for averaging
+        let minAvailableCapacity = Infinity;  // Track minimum available capacity
+        let maxAvailableCapacity = 0;  // Track maximum available capacity
+        let maxImportLevelise = 0;  // Track maximum grid import per period in Levelise scenario
+        let leveliseSelfConsumption = 0;  // Track solar self-consumption in Levelise scenario
+        let leveliseExportTotal = 0;  // Track total exports in Levelise scenario
+        let leveliseCurtailmentTotal = 0;  // Track total curtailment in Levelise scenario
+        let leveliseDemandReductionVolume = 0;  // Track total demand reduction volume (solar + battery) in kWh
+        let solarSelfConsumptionVolume = 0;  // Track solar self-consumption volume in solar scenario
+        let solarExportVolume = 0;  // Track solar export volume in solar scenario
+        let solarCurtailedVolume = 0;  // Track solar curtailment volume in solar scenario
+
+        let totalDemand = 0;
+        let totalSolarGen = 0;
+
+        // Curtailment tracking for each scenario
+        let curtailment = {
+            solar: { demandCurtailed: 0, exportCurtailed: 0 },
+            levelise: { demandCurtailed: 0, exportCurtailed: 0 }
+        };
+
+        // Battery states - Levelise only: track solar and grid partitions separately
+        let batteryLeveliseSolar = battery.capacity * 0.25;  // Solar-charged portion
+        let batteryLeveliseGrid = battery.capacity * 0.25;   // Grid-charged portion
+        const batteryLeveliseTotal = () => batteryLeveliseSolar + batteryLeveliseGrid;
+
+        const minImport = Math.min(...tariff.import);
+        const avgImport = tariff.import.reduce((a, b) => a + b) / 48;
+
+        const hasOutdoorBattery = batteryInstallations.some(b => b.installType === 'outdoor');
+
+        demand.forEach((d, idx) => {
+            const totalLoad = d;
+            totalDemand += d;
+
+            const period = idx % 48;
+            const importRate = tariff.import[period];
+            const exportRate = tariff.export[period];
+            const standingCharge = tariff.standing / 48;
+
+            const solarGen = solar[idx] || 0;
+            totalSolarGen += solarGen;
+
+            // Scenario 1: Baseline (no solar, no battery)
+            baselineCost += totalLoad * importRate + standingCharge;
+
+            // Scenario 2: Solar only
+            let gridImport1 = Math.max(0, totalLoad - solarGen);
+            const demandCurtailed1 = gridImport1 - Math.min(gridImport1, importLimitPerPeriod); // Demand curtailed by import limit
+            gridImport1 = Math.min(gridImport1, importLimitPerPeriod); // Apply import limit
+
+            const potentialExport1 = Math.max(0, solarGen - totalLoad);
+            let gridExport1 = exportAllowed ? Math.min(potentialExport1, exportLimitPerPeriod) : 0;
+            const exportCurtailed1 = potentialExport1 - gridExport1; // Export curtailed by export limit or not allowed
+
+            curtailment.solar.demandCurtailed += demandCurtailed1;
+            curtailment.solar.exportCurtailed += exportCurtailed1;
+
+            // Track solar demand reduction (self-consumption) and export value separately
+            const solarSelfConsumed = totalLoad - gridImport1;  // Amount of solar used directly
+            solarSelfConsumptionVolume += solarSelfConsumed;  // Track volume of self-consumption
+            solarExportVolume += gridExport1;  // Track volume of export
+            solarCurtailedVolume += exportCurtailed1;  // Track volume of curtailment
+            solarDemandReductionValue += solarSelfConsumed * importRate;  // Value of avoiding import
+            solarExportValue += gridExport1 * exportRate;  // Value of export revenue
+
+            solarCost += gridImport1 * importRate - gridExport1 * exportRate + standingCharge;
+
+            // Calculate demand after solar and excess solar for Levelise scenario
+            const demandAfterSolar = Math.max(0, totalLoad - solarGen);
+            const excessSolar = Math.max(0, solarGen - totalLoad);
+
+            // Scenario 3: Levelise optimization with partitioned battery tracking
+            const isCheap = importRate < avgImport * 0.9;
+            const isExpensive = importRate > avgImport * 1.1;
+
+            const leveliseEfficiency = hasOutdoorBattery ? getAdjustedEfficiency(idx, 0.90) : 0.90;
+            const leveliseChargeLimit = battery.power * 0.5 * leveliseEfficiency;
+            const leveliseDischargeLimit = battery.power * 0.5 * leveliseEfficiency;
+
+            let leveliseSolarCharge = 0;
+            let leveliseGridCharge = 0;
+            let leveliseDischarge = 0;
+            let leveliseSolarDischarge = 0;
+            let leveliseGridDischarge = 0;
+
+            // First, try to charge from excess solar
+            if (excessSolar > 0 && batteryLeveliseTotal() < battery.capacity * 0.9) {
+                leveliseSolarCharge = Math.min(leveliseChargeLimit, excessSolar, battery.capacity * 0.9 - batteryLeveliseTotal());
+                batteryLeveliseSolar += leveliseSolarCharge * leveliseEfficiency;
+            }
+
+            // Then, charge from grid if tariff is cheap
+            if (isCheap && batteryLeveliseTotal() < battery.capacity * 0.9) {
+                leveliseGridCharge = Math.min(leveliseChargeLimit - leveliseSolarCharge, battery.capacity * 0.9 - batteryLeveliseTotal());
+                batteryLeveliseGrid += leveliseGridCharge * leveliseEfficiency;
+            }
+
+            // Discharge: use solar partition first (FIFO), then grid partition
+            if (demandAfterSolar > 0) {
+                if (isExpensive) {
+                    // Aggressive discharge during expensive periods
+                    const targetDischarge = Math.min(leveliseDischargeLimit, demandAfterSolar, batteryLeveliseTotal() - battery.capacity * 0.1);
+
+                    // Use solar-charged energy first
+                    leveliseSolarDischarge = Math.min(targetDischarge, batteryLeveliseSolar);
+                    batteryLeveliseSolar -= leveliseSolarDischarge;
+
+                    // Use grid-charged energy if needed
+                    const remainingDischarge = targetDischarge - leveliseSolarDischarge;
+                    leveliseGridDischarge = Math.min(remainingDischarge, batteryLeveliseGrid);
+                    batteryLeveliseGrid -= leveliseGridDischarge;
+
+                } else if (!isCheap && !isExpensive) {
+                    // Moderate discharge during normal periods
+                    const targetDischarge = Math.min(leveliseDischargeLimit, demandAfterSolar, Math.max(0, batteryLeveliseTotal() - battery.capacity * 0.3));
+
+                    // Use solar-charged energy first
+                    leveliseSolarDischarge = Math.min(targetDischarge, batteryLeveliseSolar);
+                    batteryLeveliseSolar -= leveliseSolarDischarge;
+
+                    // Use grid-charged energy if needed
+                    const remainingDischarge = targetDischarge - leveliseSolarDischarge;
+                    leveliseGridDischarge = Math.min(remainingDischarge, batteryLeveliseGrid);
+                    batteryLeveliseGrid -= leveliseGridDischarge;
+                }
+            }
+
+            leveliseDischarge = leveliseSolarDischarge + leveliseGridDischarge;
+            const leveliseTotalCharge = leveliseSolarCharge + leveliseGridCharge;
+
+            let gridImport5 = Math.max(0, totalLoad - solarGen + leveliseGridCharge - leveliseDischarge);
+            const demandCurtailed5 = gridImport5 - Math.min(gridImport5, importLimitPerPeriod); // Demand curtailed by import limit
+            gridImport5 = Math.min(gridImport5, importLimitPerPeriod); // Apply import limit
+
+            // Track maximum import per period in Levelise scenario
+            maxImportLevelise = Math.max(maxImportLevelise, gridImport5);
+
+            const potentialExport5 = Math.max(0, solarGen - totalLoad - leveliseSolarCharge);
+            const gridExport5 = exportAllowed ? Math.min(potentialExport5, exportLimitPerPeriod) : 0;
+            const exportCurtailed5 = potentialExport5 - gridExport5; // Export curtailed
+
+            // Track Levelise scenario outputs
+            leveliseExportTotal += gridExport5;
+            leveliseCurtailmentTotal += exportCurtailed5;
+
+            curtailment.levelise.demandCurtailed += demandCurtailed5;
+            curtailment.levelise.exportCurtailed += exportCurtailed5;
+
+            const importCost5 = gridImport5 * importRate;
+            const exportEarning5 = gridExport5 * exportRate;
+
+            leveliseCost += importCost5 - exportEarning5 + standingCharge;
+
+            // Track breakdown for battery info display
+            leveliseDemandImportCost += importCost5;
+            leveliseExportRevenue += exportEarning5;
+            leveliseStandingCharge += standingCharge;
+
+            // Battery value attribution by partition:
+            // 1. Demand Reduction (Battery + Solar): Value from solar self-consumption + battery solar discharge
+            const solarSelfConsumedLevelise = totalLoad - demandAfterSolar;  // Direct solar self-consumption in Levelise scenario
+            leveliseSelfConsumption += solarSelfConsumedLevelise;  // Track total self-consumption
+            leveliseDemandReductionVolume += solarSelfConsumedLevelise + leveliseSolarDischarge;  // Track total demand reduction volume
+            const solarSelfConsumptionValue = solarSelfConsumedLevelise * importRate;  // Value of direct solar self-consumption
+            const solarDischargeValue = leveliseSolarDischarge * importRate;  // Saves grid import from battery discharge
+            const totalDemandReduction = solarSelfConsumptionValue + solarDischargeValue;  // Total demand reduction
+
+            // 2. Rates Arbitrage: Value from grid-charged energy (buy low, discharge high)
+            const gridDischargeValue = leveliseGridDischarge * importRate;   // Value of discharge
+            const gridChargeCost = leveliseGridCharge * importRate;          // Cost to charge
+            const gridArbitrage = gridDischargeValue - gridChargeCost;       // Net arbitrage
+
+            // 3. Capacity market revenue (£25/kW per year, only if export allowed)
+            // Note: This is calculated OUTSIDE the loop as a fixed annual amount
+            const capacityRevenue = 0;  // Will be calculated once outside the loop
+            const capacityUserShare = capacityRevenue;  // 100% to user (no revenue share)
+
+            // 4. Response market revenue (constant pricing based on unused capacity)
+            // Convert kWh per half-hour to kW power
+            const chargingPower = leveliseTotalCharge * 2;  // kWh / 0.5h = kW
+            const dischargingPower = leveliseDischarge * 2;  // kWh / 0.5h = kW
+
+            // Available capacity for response services (constrained by export limit)
+            // Maximum discharge allowed = local demand + allowable exports (both in kW)
+            const demandAfterSolarKW = demandAfterSolar * 2;  // Convert kWh to kW (÷ 0.5 hours = × 2)
+            const maxDischargePower = demandAfterSolarKW + (exportLimitPerPeriod * 2);
+
+            // Available response capacity is inverter power minus what's being used
+            // But capacity available for response is limited by what can actually be discharged
+            // (demand + allowable exports)
+            const maxUsablePower = demandAfterSolarKW + (exportLimitPerPeriod * 2);
+            const usedPower = Math.max(chargingPower, Math.min(dischargingPower, maxDischargePower));
+            const availableCapacity = Math.max(0, Math.min(battery.power - usedPower, maxUsablePower - usedPower));
+
+            // Track for average and minimum/maximum calculations
+            totalAvailableCapacity += availableCapacity;
+            minAvailableCapacity = Math.min(minAvailableCapacity, availableCapacity);
+            maxAvailableCapacity = Math.max(maxAvailableCapacity, availableCapacity);
+
+            const responseRevenue = (availableCapacity / 1000) * RESPONSE_PRICE * 100;  // Store in pence like other revenues (£/MW per half-hour × 100)
+            const responseUserShare = responseRevenue;  // 100% to user (no revenue share)
+
+            // Total flexibility revenue = response only (capacity is added outside loop)
+            const flexibilityRevenue = responseUserShare;  // Only response revenue in loop
+
+            // Only add flexibility revenue to leveliseRevenue
+            // Battery benefits (discharge/arbitrage) are already reflected in gridImport5 costs
+            leveliseRevenue += flexibilityRevenue;
+
+            // Track battery values separately for display
+            leveliseBatteryDemandReduction += totalDemandReduction;  // Track total demand reduction (solar + battery solar discharge)
+            leveliseRatesArbitrage += gridArbitrage;                 // Track grid partition net arbitrage
+            leveliseResponseRevenue += responseUserShare;            // Track response revenue (100% to user)
+        });
+
+        // Calculate average and minimum available capacity
+        const averageAvailableCapacity = demand.length > 0 ? totalAvailableCapacity / demand.length : 0;
+        const minCapacityForMarket = minAvailableCapacity === Infinity ? 0 : minAvailableCapacity;
+
+        // Capacity bases are min of:
+        // 1. Battery inverter power (physical limit)
+        // 2. Available capacity + export allowed (usable capacity)
+        const exportAllowedKW = exportLimitPerPeriod * 2;  // Convert from kWh per half-hour to kW
+
+        const minCapacityBase = Math.min(battery.power, minCapacityForMarket + exportAllowedKW);
+        const avgCapacityBase = Math.min(battery.power, averageAvailableCapacity + exportAllowedKW);
+        const maxCapacityBase = Math.min(battery.power, maxAvailableCapacity + exportAllowedKW);
+
+        // Capacity revenue based on minimum available capacity (for guaranteed capacity market)
+        const annualCapacityRevenue = minCapacityBase * CAPACITY_PRICE * 100;
+        leveliseCapacityRevenue = annualCapacityRevenue;  // Set to annual total (not accumulated in loop)
+        leveliseRevenue += annualCapacityRevenue;
+
+        const finalLeveliseCost = leveliseCost - leveliseRevenue;
+
+        const resultsData = {
+            baseline: baselineCost,
+            withSolar: solarCost,
+            withLevelise: finalLeveliseCost,
+            annualDemand: totalDemand,
+            annualGeneration: totalSolarGen,
+            periods: demand.length,
+            leveliseRevenue: leveliseRevenue,
+            battery: battery,
+            curtailment: curtailment,
+            // Cost breakdown for battery info display
+            leveliseDemandCost: leveliseDemandImportCost,
+            leveliseExportRevenue: leveliseExportRevenue,
+            leveliseStandingCharge: leveliseStandingCharge,
+            leveliseBatteryDemandReduction: leveliseBatteryDemandReduction,
+            leveliseRatesArbitrage: leveliseRatesArbitrage,
+            leveliseCapacityRevenue: leveliseCapacityRevenue,
+            leveliseResponseRevenue: leveliseResponseRevenue,
+            averageAvailableCapacity: averageAvailableCapacity,
+            minAvailableCapacity: minCapacityForMarket,
+            maxAvailableCapacity: maxAvailableCapacity,
+            minCapacityBase: minCapacityBase,
+            avgCapacityBase: avgCapacityBase,
+            maxCapacityBase: maxCapacityBase,
+            // Baseline costs for scenario display
+            baselineDemandCost: baselineCost - standingChargeYear,
+            standingChargeYear: standingChargeYear,
+            solarDemandSaving: solarDemandReductionValue,  // Solar self-consumption savings
+            solarExportSaving: solarExportValue,  // Solar export revenue
+            solarSelfConsumptionVolume: solarSelfConsumptionVolume,  // Solar self-consumption volume
+            solarExportVolume: solarExportVolume,  // Solar export volume
+            solarCurtailedVolume: solarCurtailedVolume,  // Solar curtailment volume
+            maxImportLevelise: maxImportLevelise,  // Maximum import per period in Levelise scenario
+            leveliseDemandReductionVolume: leveliseDemandReductionVolume,  // Total demand reduction volume (solar + battery)
+            leveliseSelfConsumption: leveliseSelfConsumption,
+            leveliseExportTotal: leveliseExportTotal,
+            leveliseCurtailmentTotal: leveliseCurtailmentTotal
+        };
+
+        displayResults(resultsData);
+        updateBatteryInfoDisplay(resultsData);
+        displayScenarioCards(resultsData);
+        updateBatteryOutput(resultsData);
+        updateSolarOutput(resultsData);
+
+    }
+
+    function updateBatteryOutput(r) {
+        const maxImportDisplay = document.getElementById('maxImportDisplay');
+        const batteryDemandReductionDisplay = document.getElementById('batteryDemandReductionDisplay');
+        const batteryExportDisplay = document.getElementById('batteryExportDisplay');
+        const batteryCurtailedDisplay = document.getElementById('batteryCurtailedDisplay');
+
+        if (maxImportDisplay) {
+            maxImportDisplay.textContent = r.maxImportLevelise ? r.maxImportLevelise.toFixed(2) : '-';
+        }
+        if (batteryDemandReductionDisplay) {
+            batteryDemandReductionDisplay.textContent = r.leveliseDemandReductionVolume ? Math.round(r.leveliseDemandReductionVolume).toLocaleString() : '-';
+        }
+        if (batteryExportDisplay) {
+            batteryExportDisplay.textContent = r.leveliseExportTotal ? Math.round(r.leveliseExportTotal).toLocaleString() : '-';
+        }
+        if (batteryCurtailedDisplay) {
+            batteryCurtailedDisplay.textContent = r.leveliseCurtailmentTotal ? Math.round(r.leveliseCurtailmentTotal).toLocaleString() : '-';
+        }
+    }
+
+    function updateSolarOutput(r) {
+        const selfConsumptionDisplay = document.getElementById('selfConsumptionGenerationDisplay');
+        const excessExportedDisplay = document.getElementById('excessGenerationExportedDisplay');
+        const curtailedDisplay = document.getElementById('curtailedGenerationDisplay');
+
+        if (selfConsumptionDisplay) {
+            selfConsumptionDisplay.textContent = r.solarSelfConsumptionVolume ? Math.round(r.solarSelfConsumptionVolume).toLocaleString() : '-';
+        }
+        if (excessExportedDisplay) {
+            excessExportedDisplay.textContent = r.solarExportVolume ? Math.round(r.solarExportVolume).toLocaleString() : '-';
+        }
+        if (curtailedDisplay) {
+            curtailedDisplay.textContent = r.solarCurtailedVolume ? Math.round(r.solarCurtailedVolume).toLocaleString() : '-';
+        }
+    }
+
+    function displayResults(r) {
+        const fmt = (v) => '£' + (v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        const card = document.getElementById('resultsCard');
+        const tariffInfo = document.getElementById('tariffInfoDisplay');
+
+        if (tariffInfo) tariffInfo.style.display = 'block';
+        if (card) card.classList.add('show');
+
+    }
+
+    function updateBatteryInfoDisplay(r) {
+        const batteryInfoDisplay = document.getElementById('batteryInfoDisplay');
+        if (!batteryInfoDisplay) return;
+
+        const fmt = (v) => '£' + (v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const fmtParen = (v) => '(£' + (v / 100).toLocaleString('en-GB', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ')';
+
+        const demandCostEl = document.getElementById('batteryDemandCostDisplay');
+        const standingEl = document.getElementById('batteryStandingDisplay');
+        const demandReductionEl = document.getElementById('batteryDemandReductionDisplay');
+        const excessSolarEl = document.getElementById('batteryExcellarSolarDisplay');
+        const ratesArbitrageEl = document.getElementById('batteryRatesArbitrageDisplay');
+        const flexibilityEl = document.getElementById('batteryFlexibilityDisplay');
+        const avgCapacityEl = document.getElementById('batteryAvgCapacityDisplay');
+        const netCostEl = document.getElementById('batteryNetCostDisplay');
+        const costPerUnitEl = document.getElementById('batteryCostPerUnitDisplay');
+
+        if (demandCostEl) demandCostEl.textContent = fmt(r.baselineDemandCost);
+        if (standingEl) standingEl.textContent = fmt(r.standingChargeYear);
+        if (demandReductionEl) demandReductionEl.textContent = fmtParen(r.leveliseBatteryDemandReduction);
+        if (excessSolarEl) excessSolarEl.textContent = fmtParen(r.leveliseExportRevenue);
+        if (ratesArbitrageEl) ratesArbitrageEl.textContent = fmtParen(r.leveliseRatesArbitrage);
+        if (flexibilityEl) flexibilityEl.textContent = fmtParen((r.leveliseCapacityRevenue || 0) + (r.leveliseResponseRevenue || 0));
+        if (avgCapacityEl) {
+            const minCap = r.minCapacityBase !== undefined ? r.minCapacityBase.toFixed(1) : '-';
+            const avgCap = r.avgCapacityBase !== undefined ? r.avgCapacityBase.toFixed(1) : '-';
+            const maxCap = r.maxCapacityBase !== undefined ? r.maxCapacityBase.toFixed(1) : '-';
+            avgCapacityEl.textContent = `${minCap} | ${avgCap} | ${maxCap} kW`;
+        }
+        if (netCostEl) netCostEl.textContent = fmt(r.withLevelise);
+        if (costPerUnitEl) {
+            const costPerUnit = r.annualDemand > 0 ? (r.withLevelise / r.annualDemand / 100) : 0;
+            costPerUnitEl.textContent = '£' + costPerUnit.toFixed(4);
+        }
+
+        batteryInfoDisplay.style.display = 'block';
+    }
+
+    // Auto-calculation
+    let calculationDebounce = null;
+
+    function attemptAutoCalculate() {
+        if (calculationDebounce) {
+            clearTimeout(calculationDebounce);
+        }
+
+        calculationDebounce = setTimeout(() => {
+            const demandEl = document.getElementById('demandData');
+            const solarEl = document.getElementById('solarProfile');
+            const tariffEl = document.getElementById('tariffData');
+            const standingEl = document.getElementById('standingCharge');
+
+            const demandData = demandEl && demandEl.value.trim() ? parseDemandData(demandEl.value) : [];
+            if (demandData.length > 0) {
+                updateDemandInfo(demandData);
+            }
+
+            const solarData = solarEl && solarEl.value.trim() ? parseSolarData(solarEl.value) : [];
+            if (solarData.length > 0) {
+                updateSolarInfo(solarData);
+            }
+
+            if (tariffEl && tariffEl.value.trim()) {
+                updateTariffInfo();
+            }
+
+            // Show tariff info display if data is present
+            const tariffInfoDisplay = document.getElementById('tariffInfoDisplay');
+            if (tariffInfoDisplay) {
+                const hasTariff = tariffEl && tariffEl.value.trim();
+                const hasStanding = standingEl && standingEl.value.trim();
+                const hasDemand = demandData.length > 0;
+                if (hasTariff && hasStanding && hasDemand) {
+                    tariffInfoDisplay.style.display = 'block';
+                }
+            }
+
+            updateCardStates();
+
+            const hasDemand = demandData.length > 0;
+            const hasSolar = solarData.length > 0;
+            const hasTariff = tariffEl && tariffEl.value.trim();
+            const hasStanding = standingEl && standingEl.value.trim();
+            const hasBattery = batteryInstallations.length > 0 && batteryInstallations.some(b => b.power > 0 && b.capacity > 0);
+
+            if (hasDemand && hasSolar && hasTariff && hasStanding && hasBattery) {
+                try {
+                    calculateSavings();
+                } catch (e) {
+                    console.log('Auto-calc error:', e.message);
+                }
+            }
+        }, 500);
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Demand data input
+        const demandData = document.getElementById('demandData');
+        if (demandData) {
+            demandData.addEventListener('input', function() {
+                const data = parseDemandData(this.value);
+                if (data.length > 0) {
+                    updateDemandInfo(data);
+                }
+                updateCardStates();
+                attemptAutoCalculate();
+            });
+        }
+
+        // Solar profile input
+        const solarProfile = document.getElementById('solarProfile');
+        if (solarProfile) {
+            solarProfile.addEventListener('input', function() {
+                const data = parseSolarData(this.value);
+                if (data.length > 0) {
+                    updateSolarInfo(data);
+                }
+                updateCardStates();
+                attemptAutoCalculate();
+            });
+        }
+
+        // Tariff data input
+        const tariffData = document.getElementById('tariffData');
+        if (tariffData) {
+            tariffData.addEventListener('input', function() {
+                updateTariffInfo();
+                updateCardStates();
+                attemptAutoCalculate();
+            });
+        }
+
+        // Standing charge input
+        const standingCharge = document.getElementById('standingCharge');
+        if (standingCharge) {
+            standingCharge.addEventListener('input', function() {
+                updateTariffInfo();
+                updateCardStates();
+                attemptAutoCalculate();
+            });
+        }
+
+        // Export limit input
+        const exportLimit = document.getElementById('exportLimit');
+        if (exportLimit) {
+            exportLimit.addEventListener('input', function() {
+                updateSolarInverterBadge();
+                attemptAutoCalculate();
+            });
+        }
+
+        // Initialize card states
+        updateCardStates();
+    });
+
+    // Initialize map function (placeholder)
+    function initializeMap(lat, lon, name) {
+        // Map initialization placeholder
+    }
+
+</script>
+</body>
+</html>
