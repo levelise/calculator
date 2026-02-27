@@ -1,13 +1,634 @@
 <!DOCTYPE html>
-
-<html lang="en">
-<head>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light">
     <title>Levelise Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0I5nvwUgHU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0I5nvwU.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+</style>
+    <style>
+/* fallback */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/materialsymbolsoutlined/v311/kJEPBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oDMzBwG-RpA6RzaxHMPdY40KH8nGzv3fzfVJO1Q.woff2) format('woff2');
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+}
+
+</style>
     <style>
         :root {
             --bg-primary: #ffffff;
@@ -951,7 +1572,7 @@
                 <span class="header-title">Calculator<sup style="font-size: 0.35em; margin-left: 4px;">BETA</sup></span>
             </div>
             <div class="header-actions" style="margin-left: auto; padding-right: 24px;">
-                <a href="https://www.levelise.com" target="_blank"><img src="https://www.levelise.com/wp-content/uploads/2023/08/logo.png" alt="Levelise Logo" style="max-width: 90px; height: auto;"></a>
+                <a href="https://www.levelise.com/" target="_blank"><img src="data:image/webp;base64,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" alt="Levelise Logo" style="max-width: 90px; height: auto;"></a>
             </div>
         </header>
 
@@ -966,8 +1587,7 @@
                     </div>
                     <div class="input-group postcode-input-group">
                         <label>POSTCODE AREA</label>
-                        <input type="text" id="postcodeInput" placeholder="OX"
-                               oninput="handlePostcodeInput(this.value)" style="text-transform: uppercase;">
+                        <input type="text" id="postcodeInput" placeholder="OX" oninput="handlePostcodeInput(this.value)" style="text-transform: uppercase;">
                         <p class="postcode-helper">First part of the postcode (i.e. postcode area)</p>
                     </div>
                     <div class="info-display" id="locationDisplay">
@@ -987,18 +1607,44 @@
                 </div>
 
                 <!-- Consumption Section -->
-                <div class="card" id="demandCard">
+                <div class="card card-disabled" id="demandCard">
                     <div class="card-title">
                         <span>Consumption</span>
                         <span class="input-number">Input 02</span>
                     </div>
-                    <div class="input-group">
+                    
+                    <!-- Input Mode Toggle -->
+                    <div style="display: flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                        <button type="button" id="annualModeBtn" onclick="switchDemandMode('annual')" style="flex: 1; padding: 10px 16px; border: none; background: var(--accent-primary); color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Annual Value
+                        </button>
+                        <button type="button" id="halfHourlyModeBtn" onclick="switchDemandMode('halfhourly')" style="flex: 1; padding: 10px 16px; border: none; background: var(--bg-secondary); color: var(--text-secondary); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Half-hourly Data
+                        </button>
+                    </div>
+                    
+                    <!-- Annual Value Input Section -->
+                    <div id="annualInputSection" class="input-group">
+                        <label>ANNUAL CONSUMPTION (kWh)</label>
+                                                <input type="text" id="annualConsumptionInput" inputmode="numeric" placeholder="3,100" oninput="formatAndHandleConsumptionInput(this)">
+                        
+                        <label style="margin-top: 16px;">LOAD PROFILE TYPE</label>
+                        <select id="demandProfileType" onchange="handleAnnualConsumptionInput()">
+                            <option value="domestic_1">Domestic</option>
+                            <option value="sme_3">Commercial</option>
+                        </select>
+                        <p class="helper">Select a profile that best matches your consumption pattern</p>
+                    </div>
+                    
+                    <!-- Half-hourly Data Input Section (hidden by default) -->
+                    <div id="halfHourlyInputSection" class="input-group" style="display: none;">
                         <label>HALF-HOURLY CONSUMPTION DATA (kWh)</label>
-                        <textarea id="demandData" placeholder="01-01-2024 00:00&#9;25.5
+                        <textarea id="demandData" placeholder="01-01-2024 00:00	25.5
 01-01-2024 00:30	24.8
-…"></textarea>
+..."></textarea>
                         <p class="helper">17,520 values for full year (tab-separated)</p>
                     </div>
+                    
                     <div id="demandInfoDisplay" class="info-display">
                         <div class="info-row">
                             <span class="info-label">Consumption per year</span>
@@ -1012,23 +1658,42 @@
                 </div>
 
                 <!-- Solar Section -->
-                <div class="card" id="solarCard">
+                <div class="card card-disabled" id="solarCard">
                     <div class="card-title">
                         <span>Solar</span>
                         <span class="input-number">Input 03</span>
                     </div>
                     <div class="input-group">
                         <label>EXPORT LIMIT (kW)</label>
-                        <input type="number" id="exportLimit" value="" min="0" step="1" placeholder="Empty = unlimited" oninput="updateSolarInverterBadge(); attemptAutoCalculate()">
-
+                        <input type="number" id="exportLimit" min="0" step="1" placeholder="Empty = unlimited" oninput="updateSolarInverterBadge(); attemptAutoCalculate()">
                     </div>
-                    <div class="input-group">
-                        <label style="margin-top: 20px; display: block;">HALF-HOURLY SOLAR GENERATION DATA (kWh)</label>
-                        <textarea id="solarProfile" placeholder="01-01-2024 00:00&#9;0.0
+                    
+                    <!-- Input Mode Toggle -->
+                    <div style="display: flex; gap: 0; margin: 16px 0; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                        <button type="button" id="solarAnnualModeBtn" onclick="switchSolarMode('annual')" style="flex: 1; padding: 10px 16px; border: none; background: var(--accent-primary); color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Annual Value
+                        </button>
+                        <button type="button" id="solarHalfHourlyModeBtn" onclick="switchSolarMode('halfhourly')" style="flex: 1; padding: 10px 16px; border: none; background: var(--bg-secondary); color: var(--text-secondary); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Half-hourly Data
+                        </button>
+                    </div>
+                    
+                    <!-- Annual Value Input Section -->
+                    <div id="solarAnnualInputSection" class="input-group">
+                        <label>ANNUAL GENERATION (kWh)</label>
+                        <input type="text" id="annualGenerationInput" inputmode="numeric" placeholder="3,795" oninput="formatAndHandleGenerationInput(this)">
+                        <p class="helper">Total expected solar generation per year</p>
+                    </div>
+                    
+                    <!-- Half-hourly Data Input Section (hidden by default) -->
+                    <div id="solarHalfHourlyInputSection" class="input-group" style="display: none;">
+                        <label>HALF-HOURLY SOLAR GENERATION DATA (kWh)</label>
+                        <textarea id="solarProfile" placeholder="01-01-2024 00:00	0.0
 01-01-2024 00:30	0.0
-…"></textarea>
+..."></textarea>
                         <p class="helper">17,520 values for full year (tab-separated)</p>
                     </div>
+                    
                     <div id="solarInfoDisplay" class="info-display">
                         <div class="info-row">
                             <span class="info-label">Generation per year</span>
@@ -1050,26 +1715,49 @@
                 </div>
 
                 <!-- Rates Section -->
-                <div class="card" id="ratesCard">
+                <div class="card card-disabled" id="ratesCard">
                     <div class="card-title">
                         <span>Rates</span>
                         <span class="input-number">Input 04</span>
                     </div>
-                    <div class="input-group">
-                        <label>HALF-HOURLY TARIFF RATES (pence per kWh)</label>
-                        <textarea id="tariffData" placeholder="00:00&#9;30.0&#9;6.0
-00:30	30.0	6.0
-…"></textarea>
-                        <p class="helper">48 half-hourly periods (tab-separated)</p>
+                    
+                    <!-- Input Mode Toggle -->
+                    <div style="display: flex; gap: 0; margin-bottom: 16px; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                        <button type="button" id="ratesFixedModeBtn" onclick="switchRatesMode('fixed')" style="flex: 1; padding: 10px 16px; border: none; background: var(--accent-primary); color: white; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Fixed Rate
+                        </button>
+                        <button type="button" id="ratesHalfHourlyModeBtn" onclick="switchRatesMode('halfhourly')" style="flex: 1; padding: 10px 16px; border: none; background: var(--bg-secondary); color: var(--text-secondary); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s;">
+                            Half-hourly Data
+                        </button>
                     </div>
-                    <div class="input-group">
-                        <label>STANDING CHARGE (pence per day)</label>
-                        <input type="number" id="standingCharge" placeholder="50.0" step="0.1">
+                    
+                    <!-- Fixed Rate Input Section -->
+                    <div id="ratesFixedInputSection" class="input-group">
+                        <label>IMPORT RATE (pence per kWh)</label>
+                        <input type="number" id="fixedImportRate" min="0" step="0.1" placeholder="27.69" oninput="handleFixedRatesInput()">
+                        
+                        <label style="margin-top: 16px;">EXPORT RATE (pence per kWh)</label>
+                        <input type="number" id="fixedExportRate" min="0" step="0.01" placeholder="15.00" oninput="handleFixedRatesInput()">
+                        
+                        <label style="margin-top: 16px;">STANDING CHARGE (pence per day)</label>
+                        <input type="number" id="standingCharge" placeholder="54.75" step="0.1" oninput="handleFixedRatesInput()">
+                    </div>
+                    
+                    <!-- Half-hourly Data Input Section (hidden by default) -->
+                    <div id="ratesHalfHourlyInputSection" class="input-group" style="display: none;">
+                        <label>HALF-HOURLY TARIFF RATES (pence per kWh)</label>
+                        <textarea id="tariffData" placeholder="00:00	30.0	6.0
+00:30	30.0	6.0
+..."></textarea>
+                        <p class="helper">48 half-hourly periods (tab-separated: time, import, export)</p>
+                        
+                        <label style="margin-top: 16px;">STANDING CHARGE (pence per day)</label>
+                        <input type="number" id="standingChargeHalfHourly" placeholder="54.75" step="0.1">
                     </div>
                 </div>
 
                 <!-- Battery Section -->
-                <div class="card" id="batteryCard">
+                <div class="card card-disabled" id="batteryCard">
                     <div class="card-title">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <span>Battery</span>
@@ -1200,249 +1888,20 @@
 
         <!-- Footer -->
         <footer style="text-align: center; padding: 24px 20px; margin-top: 40px; font-size: 0.75rem; color: #999999;">
-            Levelise Limited is registered in England and Wales. Company number: 10653159, Levelise® is a registered Trademark of Levelise Limited © 2026 Levelise Limited, All rights reserved.
+            Levelise Limited is registered in England and Wales. Company
+ number: 10653159, Levelise® is a registered Trademark of Levelise 
+Limited © 2026 Levelise Limited, All rights reserved.
         </footer>
     </div>
 
 <script>
 
-    // Global error handler
-
     // Data storage
     let currentLocation = null;
     let temperatureData = [];
     let batteryInstallations = [];
-    const RESPONSE_PRICE = 1.84;  // Constant response market price (£/MW per half-hour, which is £3.68/MW per hour)
-    const CAPACITY_PRICE = 17.63;  // Constant capacity market price (£17.63/kW per year, only if export allowed)
-
-    // Embedded example energy data (17,520 half-hourly readings for 365 days with timestamps)
-    const EXAMPLE_ENERGY_DATA = {
-        demand: `0.11
-0.09
-0.08
-0.08
-0.08
-0.09
-0.14
-0.19
-0.27
-0.31
-0.24
-0.19
-0.17
-0.15
-0.14
-0.12
-0.11
-0.12
-0.14
-0.15
-0.17
-0.18
-0.19
-0.18
-0.15
-0.14
-0.12
-0.11
-0.11
-0.11
-0.14
-0.15
-0.19
-0.24
-0.29
-0.32
-0.34
-0.32
-0.27
-0.23
-0.19
-0.15
-0.14
-0.12
-0.11
-0.09
-0.08
-0.08
-0.12
-0.10
-0.08
-0.08
-0.08
-0.10
-0.14
-0.20
-0.28
-0.32
-0.26
-0.20
-0.18
-0.16
-0.14
-0.13
-0.12
-0.13
-0.14
-0.16
-0.18
-0.19
-0.20
-0.19
-0.17
-0.16
-0.14
-0.12
-0.11
-0.09
-0.08
-0.08
-0.11
-0.10
-0.08
-0.08
-0.08
-0.10
-0.14
-0.20
-0.28
-0.32
-0.26
-0.20
-0.18
-0.16
-0.14
-0.13
-0.12
-0.13
-0.14
-0.16
-0.18
-0.19
-0.20
-0.19
-0.17
-0.16
-0.14
-0.12
-0.11
-0.09
-0.08
-0.08`, solar: `0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.06
-0.10
-0.13
-0.15
-0.16
-0.16
-0.15
-0.13
-0.10
-0.06
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.06
-0.10
-0.13
-0.15
-0.16
-0.16
-0.15
-0.13
-0.10
-0.06
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.06
-0.10
-0.13
-0.15
-0.16
-0.16
-0.15
-0.13
-0.10
-0.06
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.06
-0.10
-0.13
-0.15
-0.16
-0.16
-0.15
-0.13
-0.10
-0.06
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.06
-0.10
-0.13
-0.15
-0.16
-0.16
-0.15
-0.13
-0.10
-0.06
-0.00
-0.00
-0.00
-0.00`
-};
+    const RESPONSE_PRICE = 1.84;   // £/MW per half-hour
+    const CAPACITY_PRICE = 17.63;  // £/kW per year
 
     // UK Locations data
     const UK_LOCATIONS = {
@@ -1472,26 +1931,6 @@
         belfast: { name: 'Belfast', lat: 54.6, irradiance: 800, avgTemp: 9.5, winterMin: 2, summerMax: 18, dno: 'NIE Networks', region: 'Northern Ireland' }
     };
 
-    // Battery types
-    const BATTERY_TYPES = {
-        ci_small: { name: 'C&I Small', power: 50, capacity: 100, description: '50kW / 100kWh' },
-        ci_medium: { name: 'C&I Medium', power: 100, capacity: 200, description: '100kW / 200kWh' },
-        ci_large: { name: 'C&I Large', power: 250, capacity: 500, description: '250kW / 500kWh' },
-        ci_xlarge: { name: 'C&I X-Large', power: 500, capacity: 1000, description: '500kW / 1MWh' },
-        utility_small: { name: 'Utility Small', power: 1000, capacity: 2000, description: '1MW / 2MWh' },
-        custom: { name: 'Custom', power: 0, capacity: 0, description: 'Enter values' }
-    };
-
-    // Chargepoint types
-    const CHARGEPOINTS = {
-        ac_7: { power: 7, type: 'AC', description: '7kW Single Phase' },
-        ac_11: { power: 11, type: 'AC', description: '11kW Three Phase' },
-        ac_22: { power: 22, type: 'AC', description: '22kW Three Phase' },
-        dc_50: { power: 50, type: 'DC', description: '50kW DC Fast' },
-        dc_150: { power: 150, type: 'DC', description: '150kW DC Rapid' }
-    };
-
-    // Utility functions
     // Location functions
     window.loadLocation = function(locationId) {
 
@@ -1528,17 +1967,7 @@
         if (locationCoordsEl) locationCoordsEl.textContent =
             `${loc.lat.toFixed(4)}°N, ${loc.lat > 0 ? 'N' : 'S'}`;
 
-        // Initialize map
-        initializeMap(loc.lat, -2.5, loc.name); // Approximate UK center longitude
-
         generateTemperatureData(loc);
-
-        // Regenerate solar if preset selected
-        const solarSelector = document.getElementById('solarSelector');
-        if (solarSelector && solarSelector.value) {
-            loadSolarProfile(solarSelector.value);
-        }
-
         attemptAutoCalculate();
 
     };
@@ -1945,10 +2374,6 @@
 
     };
 
-    window.handleBatteryTypeChange = function(entryId, typeValue) {
-        // No longer needed with new structure
-    };
-
     window.removeBatteryEntry = function(id) {
 
         const entry = document.getElementById(id);
@@ -2071,16 +2496,31 @@
         batteryInstallations.forEach(b => {
             let installFactor = 1.0;
             if (b.installType === 'indoor') {
+                // Indoor: stable temperature, no penalty
                 installFactor = 1.0;
-            } else if (b.installType === 'sheltered') {
-                const tempDelta = Math.abs(temp - 20);
-                installFactor = 1 - (tempDelta * 0.008);
             } else {
-                // Outdoor: more aggressive penalty
+                // Outdoor: significant penalty due to temperature extremes
+                // UK temperatures can range from -5°C to 35°C
+                // Optimal battery temp is ~20°C
+                // Penalty increases more steeply the further from optimal
                 const tempDelta = Math.abs(temp - 20);
-                installFactor = 1 - (tempDelta * 0.015);
+                
+                // Base penalty: 2.5% per degree from optimal
+                // Additional penalty for extreme cold (below 5°C) or heat (above 30°C)
+                let penalty = tempDelta * 0.025;
+                
+                if (temp < 5) {
+                    // Extra cold penalty - batteries struggle in cold
+                    penalty += (5 - temp) * 0.03;
+                } else if (temp > 30) {
+                    // Extra heat penalty - thermal throttling
+                    penalty += (temp - 30) * 0.02;
+                }
+                
+                installFactor = 1 - penalty;
             }
-            weightedEff += b.capacity * baseEfficiency * Math.max(0.55, Math.min(1.0, installFactor));
+            // Floor at 45% efficiency for outdoor in extreme conditions
+            weightedEff += b.capacity * baseEfficiency * Math.max(0.45, Math.min(1.0, installFactor));
             totalCapacity += b.capacity;
         });
 
@@ -2213,23 +2653,13 @@
         const maxConsumption = Math.max(...demandData);
 
         // Update display
-        annualDisplay.textContent = Math.round(annualDemand).toLocaleString();
+        annualDisplay.textContent = Math.round(annualDemand).toLocaleString('en-GB');
         curtailedDisplay.textContent = maxConsumption.toFixed(2);
 
         infoDisplay.classList.add('show');
 
     }
 
-    function updateImportLimitInfo() {
-        // Update demand curtailment if demand data exists
-        const demandTextarea = document.getElementById('demandData');
-        if (demandTextarea && demandTextarea.value.trim()) {
-            const demandData = parseDemandData(demandTextarea.value);
-            if (demandData.length > 0) {
-                updateDemandInfo(demandData);
-            }
-        }
-    }
 
     function parseSolarData(text) {
         const lines = text.trim().split('\n');
@@ -2305,15 +2735,15 @@
         }
 
         // Update display
-        annualDisplay.textContent = Math.round(annualGeneration).toLocaleString();
+        annualDisplay.textContent = Math.round(annualGeneration).toLocaleString('en-GB');
         if (selfConsumptionDisplay) {
-            selfConsumptionDisplay.textContent = Math.round(selfConsumption).toLocaleString();
+            selfConsumptionDisplay.textContent = Math.round(selfConsumption).toLocaleString('en-GB');
         }
         if (excessGenerationExportedDisplay) {
-            excessGenerationExportedDisplay.textContent = Math.round(excessGenerationExported).toLocaleString();
+            excessGenerationExportedDisplay.textContent = Math.round(excessGenerationExported).toLocaleString('en-GB');
         }
         if (exportLimit !== null && exportLimit >= 0) {
-            curtailedDisplay.textContent = Math.round(curtailedGeneration).toLocaleString();
+            curtailedDisplay.textContent = Math.round(curtailedGeneration).toLocaleString('en-GB');
         } else {
             curtailedDisplay.textContent = '0';
         }
@@ -2356,54 +2786,243 @@
         return { import: importRates, export: exportRates, standing: standing };
     }
 
-    // Preset loading functions
-    window.loadDemandProfile = function(profileId) {
 
-        if (!profileId) return;
-        let data = [];
-        const periodsPerDay = 48;
-        const daysInYear = 365;
+    // Demand input mode state
+    let currentDemandMode = 'annual';
 
-        // Generate synthetic demand profiles
-        const profiles = {
-            office_small: { base: 8, peak: 15, annual: 150000 },
-            office_medium: { base: 18, peak: 35, annual: 350000 },
-            warehouse: { base: 30, peak: 60, annual: 600000 },
-            retail: { base: 20, peak: 40, annual: 400000 }
-        };
-
-        const profile = profiles[profileId];
-        if (!profile) return;
-
-        // Scale factor to match annual consumption
-        const baseAnnual = profile.base * periodsPerDay * daysInYear;
-        const scaleFactor = profile.annual / baseAnnual;
-
-        for (let day = 0; day < daysInYear; day++) {
-            const isWeekend = (day % 7) >= 5;
-            const dayOfYear = day + 1;
-            const seasonalFactor = 1 + 0.2 * Math.cos((dayOfYear - 172) * 2 * Math.PI / 365);
-
-            for (let period = 0; period < periodsPerDay; period++) {
-                const hour = period / 2;
-                let value = profile.base;
-
-                // Working hours peak (8am - 6pm weekdays)
-                if (!isWeekend && hour >= 8 && hour <= 18) {
-                    value = profile.base + (profile.peak - profile.base) * (1 - Math.abs(hour - 13) / 5);
-                } else if (isWeekend) {
-                    value = profile.base * 0.4;
-                } else {
-                    value = profile.base * 0.3;
+    // Switch between annual value and half-hourly data input modes
+    window.switchDemandMode = function(mode) {
+        currentDemandMode = mode;
+        
+        const annualSection = document.getElementById('annualInputSection');
+        const halfHourlySection = document.getElementById('halfHourlyInputSection');
+        const annualBtn = document.getElementById('annualModeBtn');
+        const halfHourlyBtn = document.getElementById('halfHourlyModeBtn');
+        
+        if (mode === 'annual') {
+            annualSection.style.display = 'block';
+            halfHourlySection.style.display = 'none';
+            annualBtn.style.background = 'var(--accent-primary)';
+            annualBtn.style.color = 'white';
+            halfHourlyBtn.style.background = 'var(--bg-secondary)';
+            halfHourlyBtn.style.color = 'var(--text-secondary)';
+            handleAnnualConsumptionInput();
+        } else {
+            annualSection.style.display = 'none';
+            halfHourlySection.style.display = 'block';
+            halfHourlyBtn.style.background = 'var(--accent-primary)';
+            halfHourlyBtn.style.color = 'white';
+            annualBtn.style.background = 'var(--bg-secondary)';
+            annualBtn.style.color = 'var(--text-secondary)';
+            
+            const demandData = document.getElementById('demandData');
+            if (demandData && demandData.value.trim()) {
+                const data = parseDemandData(demandData.value);
+                if (data.length > 0) {
+                    updateDemandInfo(data);
                 }
-
-                value *= seasonalFactor * scaleFactor;
-                value += (Math.random() - 0.5) * value * 0.1;
-                data.push(Math.max(0, value));
             }
         }
+        
+        updateCardStates();
+        attemptAutoCalculate();
+    };
 
-        // Format as text
+    // Format number with commas as user types
+    function formatNumberWithCommas(value) {
+        // Remove non-numeric characters except decimal point
+        let numericValue = value.replace(/[^0-9.]/g, '');
+        
+        // Handle decimal numbers
+        let parts = numericValue.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        
+        return parts.join('.');
+    }
+    
+    // Parse formatted number back to numeric value
+    function parseFormattedNumber(value) {
+        return parseFloat(value.replace(/,/g, ''));
+    }
+    
+    // Format and handle consumption input
+    window.formatAndHandleConsumptionInput = function(input) {
+        // Get cursor position
+        const cursorPos = input.selectionStart;
+        const oldLength = input.value.length;
+        
+        // Format the value
+        const formatted = formatNumberWithCommas(input.value);
+        input.value = formatted;
+        
+        // Adjust cursor position for added/removed commas
+        const newLength = formatted.length;
+        const diff = newLength - oldLength;
+        input.setSelectionRange(cursorPos + diff, cursorPos + diff);
+        
+        // Trigger the actual handler
+        handleAnnualConsumptionInput();
+    };
+    
+    // Format and handle generation input
+    window.formatAndHandleGenerationInput = function(input) {
+        // Get cursor position
+        const cursorPos = input.selectionStart;
+        const oldLength = input.value.length;
+        
+        // Format the value
+        const formatted = formatNumberWithCommas(input.value);
+        input.value = formatted;
+        
+        // Adjust cursor position for added/removed commas
+        const newLength = formatted.length;
+        const diff = newLength - oldLength;
+        input.setSelectionRange(cursorPos + diff, cursorPos + diff);
+        
+        // Trigger the actual handler
+        handleAnnualGenerationInput();
+    };
+
+    // Handle annual consumption input
+    window.handleAnnualConsumptionInput = function() {
+        const annualInput = document.getElementById('annualConsumptionInput');
+        const profileSelect = document.getElementById('demandProfileType');
+        
+        if (!annualInput || !annualInput.value) {
+            const demandData = document.getElementById('demandData');
+            if (demandData) demandData.value = '';
+            updateCardStates();
+            return;
+        }
+        
+        const annualConsumption = parseFormattedNumber(annualInput.value);
+        if (isNaN(annualConsumption) || annualConsumption <= 0) {
+            updateCardStates();
+            return;
+        }
+        
+        const profileType = profileSelect ? profileSelect.value : 'domestic_1';
+        generateDemandFromAnnual(annualConsumption, profileType);
+    };
+
+    // Generate half-hourly demand data from annual consumption
+    function generateDemandFromAnnual(annualConsumption, profileType) {
+        const periodsPerDay = 48;
+        const daysInYear = 365;
+        
+        let normalizedData = [];
+        let normalizedSum = 0;
+        
+        // Profile generation
+        // Profile Class 1: Domestic Unrestricted - morning/evening peaks, low overnight
+        // Profile Class 3: Non-Domestic Unrestricted - business hours operation
+        
+        for (let day = 0; day < daysInYear; day++) {
+            const dayOfWeek = day % 7;
+            const isWeekend = dayOfWeek >= 5;
+            const dayOfYear = day + 1;
+            
+            // Seasonal factor: higher in winter (heating), lower in summer
+            // Peak around day 1 (Jan 1), trough around day 182 (July 1)
+            const seasonalFactor = 1 + 0.25 * Math.cos((dayOfYear - 1) * 2 * Math.PI / 365);
+            
+            for (let period = 0; period < periodsPerDay; period++) {
+                const hour = period / 2;
+                let value = 0;
+                
+                if (profileType === 'domestic_1') {
+                    // Profile Class 1: Domestic Unrestricted
+                    // Characterized by morning peak (7-9am), evening peak (5-9pm), low overnight
+                    
+                    if (hour >= 0 && hour < 6) {
+                        // Overnight base load (0:00-6:00) - very low
+                        value = 0.3;
+                    } else if (hour >= 6 && hour < 7) {
+                        // Early morning ramp up (6:00-7:00)
+                        value = 0.3 + (hour - 6) * 0.5;
+                    } else if (hour >= 7 && hour < 9) {
+                        // Morning peak (7:00-9:00) - breakfast, showers, etc
+                        const peakProgress = (hour - 7) / 2;
+                        value = 0.8 + 0.4 * Math.sin(peakProgress * Math.PI);
+                    } else if (hour >= 9 && hour < 16) {
+                        // Daytime trough (9:00-16:00) - people at work/school
+                        value = isWeekend ? 0.7 : 0.5;
+                    } else if (hour >= 16 && hour < 17) {
+                        // Afternoon ramp up (16:00-17:00)
+                        value = (isWeekend ? 0.7 : 0.5) + (hour - 16) * 0.4;
+                    } else if (hour >= 17 && hour < 21) {
+                        // Evening peak (17:00-21:00) - cooking, TV, heating
+                        const peakProgress = (hour - 17) / 4;
+                        value = 0.9 + 0.35 * Math.sin(peakProgress * Math.PI);
+                    } else if (hour >= 21 && hour < 23) {
+                        // Evening wind down (21:00-23:00)
+                        value = 0.9 - (hour - 21) * 0.25;
+                    } else {
+                        // Late evening (23:00-24:00)
+                        value = 0.4 - (hour - 23) * 0.1;
+                    }
+                    
+                    // Weekend adjustment - more daytime usage, slightly lower peaks
+                    if (isWeekend) {
+                        if (hour >= 9 && hour < 16) value *= 1.3;
+                        if (hour >= 7 && hour < 9) value *= 0.85; // Later wake up
+                    }
+                    
+                } else if (profileType === 'sme_3') {
+                    // Profile Class 3: Small/Medium Business (Non-domestic unrestricted)
+                    // Characterized by business hours operation with some base load
+                    // Typical: shops, offices, small factories, restaurants
+                    
+                    if (hour >= 0 && hour < 6) {
+                        // Overnight base load (0:00-6:00) - security, refrigeration, minimal HVAC
+                        value = 0.25;
+                    } else if (hour >= 6 && hour < 8) {
+                        // Early morning ramp up (6:00-8:00) - staff arriving, systems starting
+                        value = 0.25 + (hour - 6) * 0.3;
+                    } else if (hour >= 8 && hour < 12) {
+                        // Morning business hours (8:00-12:00)
+                        value = 0.85 + 0.15 * Math.sin((hour - 8) / 4 * Math.PI);
+                    } else if (hour >= 12 && hour < 14) {
+                        // Lunch period (12:00-14:00) - slight dip or increase depending on business type
+                        value = 0.9;
+                    } else if (hour >= 14 && hour < 17) {
+                        // Afternoon business hours (14:00-17:00) - peak operations
+                        value = 0.95 + 0.1 * Math.sin((hour - 14) / 3 * Math.PI);
+                    } else if (hour >= 17 && hour < 19) {
+                        // Evening wind down (17:00-19:00) - staff leaving, some operations continue
+                        value = 1.0 - (hour - 17) * 0.3;
+                    } else if (hour >= 19 && hour < 22) {
+                        // Late evening (19:00-22:00) - reduced operations
+                        value = 0.4 - (hour - 19) * 0.05;
+                    } else {
+                        // Night (22:00-24:00)
+                        value = 0.25;
+                    }
+                    
+                    // Weekend: significantly reduced but not zero (some SMEs operate weekends)
+                    if (isWeekend) {
+                        if (hour >= 8 && hour < 18) {
+                            value *= 0.4; // Some Saturday trading
+                        } else {
+                            value *= 0.3;
+                        }
+                        // Sunday even lower
+                        if (dayOfWeek === 0) value *= 0.7;
+                    }
+                    
+                }
+                
+                // Apply seasonal variation
+                value *= seasonalFactor;
+                
+                normalizedData.push(value);
+                normalizedSum += value;
+            }
+        }
+        
+        const scaleFactor = annualConsumption / normalizedSum;
+        const data = normalizedData.map(v => Math.max(0.01, v * scaleFactor));
+        
         let text = '';
         const startDate = new Date(2024, 0, 1);
         for (let i = 0; i < data.length; i++) {
@@ -2411,70 +3030,158 @@
             const period = i % 48;
             const hours = Math.floor(period / 2);
             const mins = (period % 2) * 30;
-            const dateStr = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
-            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-            text += `${dateStr} ${timeStr}\t${data[i].toFixed(1)}\n`;
+            const dateStr = date.getDate().toString().padStart(2, '0') + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getFullYear();
+            const timeStr = hours.toString().padStart(2, '0') + ':' + mins.toString().padStart(2, '0');
+            text += dateStr + ' ' + timeStr + '\t' + data[i].toFixed(4) + '\n';
         }
-
-        const el = document.getElementById('demandData');
-        if (el) el.value = text;
-
+        
+        const demandDataEl = document.getElementById('demandData');
+        if (demandDataEl) demandDataEl.value = text;
+        
+        updateDemandInfo(data);
+        updateCardStates();
         attemptAutoCalculate();
+    }
 
-    };
 
-    window.loadSolarProfile = function(profileId) {
 
-        if (!profileId) return;
-        const systems = {
-            solar_100kwp: { capacity: 100 },
-            solar_250kwp: { capacity: 250 },
-            solar_500kwp: { capacity: 500 }
-        };
+    // Solar input mode state
+    let currentSolarMode = 'annual';
 
-        const system = systems[profileId];
-        if (!system) return;
-
-        const irradiance = currentLocation ? currentLocation.irradiance : 900;
-        const lat = currentLocation ? currentLocation.lat : 51.5;
-
-        let data = [];
-        const periodsPerDay = 48;
-        const daysInYear = 365;
-
-        for (let day = 0; day < daysInYear; day++) {
-            const dayOfYear = day + 1;
-
-            // Day length variation
-            const declinationAngle = 23.45 * Math.sin((284 + dayOfYear) * 2 * Math.PI / 365);
-            const latRad = lat * Math.PI / 180;
-            const declRad = declinationAngle * Math.PI / 180;
-            const hourAngle = Math.acos(-Math.tan(latRad) * Math.tan(declRad));
-            const dayLength = 2 * hourAngle * 12 / Math.PI;
-            const sunrise = 12 - dayLength / 2;
-            const sunset = 12 + dayLength / 2;
-
-            // Daily peak generation (seasonal variation)
-            const seasonalFactor = 0.3 + 0.7 * Math.cos((dayOfYear - 172) * 2 * Math.PI / 365);
-            const dailyPeak = system.capacity * (irradiance / 1000) * seasonalFactor / 1000;
-
-            for (let period = 0; period < periodsPerDay; period++) {
-                const hour = period / 2;
-                let generation = 0;
-
-                if (hour >= sunrise && hour <= sunset) {
-                    const solarNoon = 12;
-                    const hourFromNoon = Math.abs(hour - solarNoon);
-                    const maxHoursFromNoon = dayLength / 2;
-                    generation = dailyPeak * Math.cos(hourFromNoon / maxHoursFromNoon * Math.PI / 2);
-                    generation *= (0.8 + Math.random() * 0.4); // Cloud variability
+    // Switch between annual value and half-hourly data input modes for solar
+    window.switchSolarMode = function(mode) {
+        currentSolarMode = mode;
+        
+        const annualSection = document.getElementById('solarAnnualInputSection');
+        const halfHourlySection = document.getElementById('solarHalfHourlyInputSection');
+        const annualBtn = document.getElementById('solarAnnualModeBtn');
+        const halfHourlyBtn = document.getElementById('solarHalfHourlyModeBtn');
+        
+        if (mode === 'annual') {
+            annualSection.style.display = 'block';
+            halfHourlySection.style.display = 'none';
+            annualBtn.style.background = 'var(--accent-primary)';
+            annualBtn.style.color = 'white';
+            halfHourlyBtn.style.background = 'var(--bg-secondary)';
+            halfHourlyBtn.style.color = 'var(--text-secondary)';
+            handleAnnualGenerationInput();
+        } else {
+            annualSection.style.display = 'none';
+            halfHourlySection.style.display = 'block';
+            halfHourlyBtn.style.background = 'var(--accent-primary)';
+            halfHourlyBtn.style.color = 'white';
+            annualBtn.style.background = 'var(--bg-secondary)';
+            annualBtn.style.color = 'var(--text-secondary)';
+            
+            const solarData = document.getElementById('solarProfile');
+            if (solarData && solarData.value.trim()) {
+                const data = parseSolarData(solarData.value);
+                if (data.length > 0) {
+                    updateSolarInfo(data);
                 }
-
-                data.push(Math.max(0, generation));
             }
         }
+        
+        updateCardStates();
+        attemptAutoCalculate();
+    };
 
-        // Format as text
+    // Handle annual generation input
+    window.handleAnnualGenerationInput = function() {
+        const annualInput = document.getElementById('annualGenerationInput');
+        
+        if (!annualInput || !annualInput.value) {
+            const solarProfile = document.getElementById('solarProfile');
+            if (solarProfile) solarProfile.value = '';
+            updateCardStates();
+            return;
+        }
+        
+        const annualGeneration = parseFormattedNumber(annualInput.value);
+        if (isNaN(annualGeneration) || annualGeneration <= 0) {
+            updateCardStates();
+            return;
+        }
+        
+        generateSolarFromAnnual(annualGeneration);
+    };
+
+    // 2025 UK Solar PV normalized profiles
+    // Source: GB Solar Photovoltaic Production data
+    const UK_SOLAR_2025_PROFILES = {
+        monthlyDistribution: [
+            0.025015,  // Jan
+            0.033938,  // Feb
+            0.092325,  // Mar
+            0.127901,  // Apr
+            0.140470,  // May
+            0.136952,  // Jun
+            0.131096,  // Jul
+            0.120563,  // Aug
+            0.091957,  // Sep
+            0.046413,  // Oct
+            0.032441,  // Nov
+            0.020928   // Dec
+        ],
+        hourlyProfiles: {
+            1: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000061, 0.000053, 0.011915, 0.081405, 0.158789, 0.203874, 0.210071, 0.181648, 0.114218, 0.036021, 0.001534, 0.000392, 0.000017, 0.000000, 0.000000, 0.000000, 0.000000],
+            2: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000014, 0.004042, 0.038104, 0.092501, 0.138652, 0.164909, 0.173734, 0.159035, 0.125326, 0.075938, 0.025993, 0.001390, 0.000363, 0.000000, 0.000000, 0.000000, 0.000000],
+            3: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000001, 0.002281, 0.023786, 0.062168, 0.100040, 0.127442, 0.145237, 0.148251, 0.136951, 0.113592, 0.081218, 0.043720, 0.012930, 0.002282, 0.000101, 0.000000, 0.000000, 0.000000],
+            4: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000011, 0.002597, 0.018562, 0.045061, 0.074151, 0.100207, 0.120323, 0.130459, 0.131390, 0.121029, 0.101975, 0.077071, 0.049410, 0.023417, 0.004297, 0.000039, 0.000000, 0.000000],
+            5: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000970, 0.010579, 0.028817, 0.052478, 0.076516, 0.097274, 0.111672, 0.118109, 0.118065, 0.111526, 0.097511, 0.077381, 0.053832, 0.031219, 0.012550, 0.001500, 0.000001, 0.000000],
+            6: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000002, 0.002573, 0.013237, 0.030057, 0.051074, 0.072462, 0.091583, 0.104763, 0.113552, 0.115643, 0.110786, 0.099227, 0.080824, 0.057869, 0.035415, 0.016717, 0.004138, 0.000078, 0.000000],
+            7: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.001197, 0.010657, 0.027889, 0.050340, 0.072910, 0.092029, 0.106157, 0.112725, 0.113261, 0.110340, 0.099156, 0.082911, 0.060617, 0.037951, 0.017858, 0.003969, 0.000033, 0.000000],
+            8: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000025, 0.004158, 0.021597, 0.047041, 0.075012, 0.096982, 0.111955, 0.120956, 0.124075, 0.118433, 0.103625, 0.081270, 0.055839, 0.029769, 0.008784, 0.000477, 0.000000, 0.000000],
+            9: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000247, 0.011127, 0.043865, 0.081403, 0.113544, 0.133247, 0.139188, 0.134590, 0.121116, 0.098865, 0.070929, 0.039816, 0.011321, 0.000743, 0.000000, 0.000000, 0.000000],
+            10: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000010, 0.003934, 0.036267, 0.089547, 0.133000, 0.151657, 0.158208, 0.150227, 0.125748, 0.090823, 0.046967, 0.012671, 0.000887, 0.000055, 0.000000, 0.000000, 0.000000],
+            11: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.001978, 0.037025, 0.116814, 0.182017, 0.207303, 0.194659, 0.153066, 0.086948, 0.019502, 0.000618, 0.000071, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000],
+            12: [0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000088, 0.010870, 0.089634, 0.178750, 0.226550, 0.222199, 0.173748, 0.086625, 0.010522, 0.000938, 0.000077, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000]
+        }
+    };
+
+    // Generate half-hourly solar data from annual generation
+    // Based on actual 2025 UK Solar PV production data
+    function generateSolarFromAnnual(annualGeneration) {
+        const periodsPerDay = 48;
+        const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        
+        let data = [];
+        
+        // Process each month
+        for (let month = 0; month < 12; month++) {
+            const monthlyShare = UK_SOLAR_2025_PROFILES.monthlyDistribution[month];
+            const monthlyGeneration = annualGeneration * monthlyShare;
+            const hourlyProfile = UK_SOLAR_2025_PROFILES.hourlyProfiles[month + 1];
+            const daysInMonth = daysPerMonth[month];
+            
+            // Daily generation for this month
+            const dailyGeneration = monthlyGeneration / daysInMonth;
+            
+            for (let day = 0; day < daysInMonth; day++) {
+                for (let period = 0; period < periodsPerDay; period++) {
+                    // Get hour (0-23) for this half-hour period
+                    const hour = Math.floor(period / 2);
+                    const isSecondHalf = period % 2 === 1;
+                    
+                    // Interpolate between hours for half-hourly resolution
+                    let value;
+                    if (isSecondHalf && hour < 23) {
+                        // Interpolate between this hour and next hour
+                        value = (hourlyProfile[hour] + hourlyProfile[hour + 1]) / 2;
+                    } else {
+                        value = hourlyProfile[hour];
+                    }
+                    
+                    // Scale to daily generation and divide by 2 for half-hourly
+                    // (hourlyProfile sums to 1.0 for each month)
+                    const halfHourlyValue = dailyGeneration * value / 2;
+                    
+                    data.push(halfHourlyValue);
+                }
+            }
+        }
+        
+        // Format as text with timestamps
         let text = '';
         const startDate = new Date(2024, 0, 1);
         for (let i = 0; i < data.length; i++) {
@@ -2482,54 +3189,106 @@
             const period = i % 48;
             const hours = Math.floor(period / 2);
             const mins = (period % 2) * 30;
-            const dateStr = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
-            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-            text += `${dateStr} ${timeStr}\t${data[i].toFixed(2)}\n`;
+            const dateStr = date.getDate().toString().padStart(2, '0') + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getFullYear();
+            const timeStr = hours.toString().padStart(2, '0') + ':' + mins.toString().padStart(2, '0');
+            text += dateStr + ' ' + timeStr + '\t' + data[i].toFixed(4) + '\n';
         }
-
-        const el = document.getElementById('solarProfile');
-        if (el) el.value = text;
-
+        
+        // Update the hidden solarProfile textarea
+        const solarProfileEl = document.getElementById('solarProfile');
+        if (solarProfileEl) solarProfileEl.value = text;
+        
+        // Update the solar info display
+        updateSolarInfo(data);
+        
+        // Trigger calculations
+        updateCardStates();
         attemptAutoCalculate();
+    }
 
+
+
+    // Rates input mode state
+    let currentRatesMode = 'fixed';
+
+    // Switch between fixed rate and half-hourly data input modes for rates
+    window.switchRatesMode = function(mode) {
+        currentRatesMode = mode;
+        
+        const fixedSection = document.getElementById('ratesFixedInputSection');
+        const halfHourlySection = document.getElementById('ratesHalfHourlyInputSection');
+        const fixedBtn = document.getElementById('ratesFixedModeBtn');
+        const halfHourlyBtn = document.getElementById('ratesHalfHourlyModeBtn');
+        
+        if (mode === 'fixed') {
+            fixedSection.style.display = 'block';
+            halfHourlySection.style.display = 'none';
+            fixedBtn.style.background = 'var(--accent-primary)';
+            fixedBtn.style.color = 'white';
+            halfHourlyBtn.style.background = 'var(--bg-secondary)';
+            halfHourlyBtn.style.color = 'var(--text-secondary)';
+            handleFixedRatesInput();
+        } else {
+            fixedSection.style.display = 'none';
+            halfHourlySection.style.display = 'block';
+            halfHourlyBtn.style.background = 'var(--accent-primary)';
+            halfHourlyBtn.style.color = 'white';
+            fixedBtn.style.background = 'var(--bg-secondary)';
+            fixedBtn.style.color = 'var(--text-secondary)';
+            
+            // Sync standing charge from half-hourly input
+            const standingHH = document.getElementById('standingChargeHalfHourly');
+            const standingMain = document.getElementById('standingCharge');
+            if (standingHH && standingMain && standingHH.value) {
+                standingMain.value = standingHH.value;
+            }
+            
+            updateTariffInfo();
+        }
+        
+        updateCardStates();
+        attemptAutoCalculate();
     };
 
-    window.loadTariff = function(tariffId) {
+    // Handle fixed rates input
+    window.handleFixedRatesInput = function() {
+        const importRateEl = document.getElementById('fixedImportRate');
+        const exportRateEl = document.getElementById('fixedExportRate');
+        const standingChargeEl = document.getElementById('standingCharge');
+        
+        const importRate = importRateEl ? parseFloat(importRateEl.value) : 0;
+        const exportRate = exportRateEl ? parseFloat(exportRateEl.value) : 0;
+        
+        if (isNaN(importRate) || importRate <= 0) {
+            const tariffData = document.getElementById('tariffData');
+            if (tariffData) tariffData.value = '';
+            updateCardStates();
+            return;
+        }
+        
+        // Generate 48 half-hourly periods with fixed rates
+        generateFixedRates(importRate, isNaN(exportRate) ? 0 : exportRate);
+        
+        updateCardStates();
+        attemptAutoCalculate();
+    };
 
-        if (!tariffId) return;
-        const tariffs = {
-            octopus_go: { offPeakStart: 0.5, offPeakEnd: 4.5, offPeakRate: 7.5, peakRate: 30, export: 4.1 },
-            economy7: { offPeakStart: 0, offPeakEnd: 7, offPeakRate: 12, peakRate: 28, export: 5 },
-            flat_rate: { offPeakStart: 0, offPeakEnd: 0, offPeakRate: 28, peakRate: 28, export: 6 },
-            tou_commercial: { offPeakStart: 22, offPeakEnd: 6, offPeakRate: 15, peakRate: 35, export: 5.5 }
-        };
-
-        const tariff = tariffs[tariffId];
-        if (!tariff) return;
-
-        let text = 'Time\tImport\tExport\n';
+    // Generate half-hourly tariff data from fixed rates
+    function generateFixedRates(importRate, exportRate) {
+        let text = '';
+        
         for (let period = 0; period < 48; period++) {
-            const hour = period / 2;
             const hours = Math.floor(period / 2);
             const mins = (period % 2) * 30;
-            const timeStr = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-
-            let rate;
-            if (tariff.offPeakStart <= tariff.offPeakEnd) {
-                rate = (hour >= tariff.offPeakStart && hour < tariff.offPeakEnd) ? tariff.offPeakRate : tariff.peakRate;
-            } else {
-                rate = (hour >= tariff.offPeakStart || hour < tariff.offPeakEnd) ? tariff.offPeakRate : tariff.peakRate;
-            }
-
-            text += `${timeStr}\t${rate.toFixed(1)}\t${tariff.export.toFixed(1)}\n`;
+            const timeStr = hours.toString().padStart(2, '0') + ':' + mins.toString().padStart(2, '0');
+            text += timeStr + '\t' + importRate.toFixed(1) + '\t' + exportRate.toFixed(1) + '\n';
         }
-
-        const el = document.getElementById('tariffData');
-        if (el) el.value = text;
-
+        
+        const tariffDataEl = document.getElementById('tariffData');
+        if (tariffDataEl) tariffDataEl.value = text;
+        
         updateTariffInfo();
-
-    };
+    }
 
     window.updateTariffInfo = function() {
 
@@ -2739,13 +3498,13 @@
             const costPerUnit = (totalDemand && totalDemand > 0 && netCost !== undefined && !isNaN(netCost)) 
                 ? (netCost / totalDemand / 100) 
                 : 0;
-            const costPerUnitStr = !isNaN(costPerUnit) && costPerUnit > 0 
-                ? costPerUnit.toFixed(4) 
+            const costPerUnitStr = !isNaN(costPerUnit) && costPerUnit !== 0 
+                ? (costPerUnit < 0 ? '-' : '') + Math.abs(costPerUnit).toFixed(4) 
                 : '£ -';
             
             // Calculate cost per unit comparison if baseline provided (absolute difference in £/kWh)
             let costPerUnitComparisonHTML = '';
-            if (costPerUnitComparison !== undefined && costPerUnit > 0 && costPerUnitComparison > 0) {
+            if (costPerUnitComparison !== undefined && costPerUnit !== 0 && costPerUnitComparison !== 0) {
                 const costDifference = costPerUnit - costPerUnitComparison;
                 const arrow = costDifference > 0 ? '↑' : costDifference < 0 ? '↓' : '→';
                 const formattedDiff = Math.abs(costDifference).toFixed(4);
@@ -3072,7 +3831,7 @@
             const isCheap = importRate < avgImport * 0.9;
             const isExpensive = importRate > avgImport * 1.1;
 
-            const leveliseEfficiency = hasOutdoorBattery ? getAdjustedEfficiency(idx, 0.90) : 0.90;
+            const leveliseEfficiency = hasOutdoorBattery ? getAdjustedEfficiency(idx, 0.81) : 0.81;
             const leveliseChargeLimit = battery.power * 0.5 * leveliseEfficiency;
             const leveliseDischargeLimit = battery.power * 0.5 * leveliseEfficiency;
 
@@ -3415,7 +4174,7 @@
                 try {
                     calculateSavings();
                 } catch (e) {
-                    console.log('Auto-calc error:', e.message);
+                    // Calculation error - silently ignore
                 }
             }
         }, 500);
@@ -3482,11 +4241,7 @@
         updateCardStates();
     });
 
-    // Initialize map function (placeholder)
-    function initializeMap(lat, lon, name) {
-        // Map initialization placeholder
-    }
-
 </script>
-</body>
-</html>
+
+
+</body></html>
