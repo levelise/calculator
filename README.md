@@ -29,7 +29,7 @@ Visit [labs.levelise.com](https://labs.levelise.com) — no installation require
 ### Option 2: Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/nicenergy/levelise-calculator.git
+git clone https://github.com/levelise/calculator.git
 
 # Open directly in your browser
 open index.html
